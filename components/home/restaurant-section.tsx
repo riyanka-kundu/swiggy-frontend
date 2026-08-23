@@ -32,16 +32,14 @@ function RestaurantCard({ restaurant }: { restaurant: RestaurantListItem }) {
           </span>
 
           <span
-            className={`absolute right-3 top-3 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm ${
-              isOpen
+            className={`absolute right-3 top-3 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm ${isOpen
                 ? "bg-green-600 text-white"
                 : "bg-muted text-muted-foreground"
-            }`}
+              }`}
           >
             <span
-              className={`h-1.5 w-1.5 rounded-full ${
-                isOpen ? "animate-pulse bg-white" : "bg-muted-foreground"
-              }`}
+              className={`h-1.5 w-1.5 rounded-full ${isOpen ? "animate-pulse bg-white" : "bg-muted-foreground"
+                }`}
             />
             {isOpen ? "Open now" : "Closed"}
           </span>
@@ -66,7 +64,7 @@ function RestaurantCard({ restaurant }: { restaurant: RestaurantListItem }) {
             {slot && (
               <Badge variant="outline" className="text-[10px] font-normal">
                 <Clock className="mr-1 h-2.5 w-2.5" />
-                {formatTime(slot.open)} – {formatTime(slot.close)}
+                {formatTime(slot.open)} - {formatTime(slot.close)}
               </Badge>
             )}
           </div>

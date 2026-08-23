@@ -8,7 +8,6 @@ import { RootState } from "@/redux/store/store";
 import { Food } from "@/type";
 import { Loader2, Plus, UtensilsCrossed } from "lucide-react";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 
@@ -17,15 +16,6 @@ function FoodCard({ food }: { food: Food }) {
   const { data: authData } = useSelector((state: RootState) => state.auth);
   const isLoggedInUser = authData?.data?.role === "user";
 
-  const restaurantId =
-    typeof food.restaurant === "object" && food.restaurant
-      ? food.restaurant._id
-      : undefined;
-  const restaurantName =
-    typeof food.restaurant === "object" && food.restaurant
-      ? food.restaurant.restaurantName
-      : "Restaurant";
-
   const effectivePrice =
     food.discountPrice > 0 ? food.discountPrice : food.basePrice;
 
@@ -33,10 +23,9 @@ function FoodCard({ food }: { food: Food }) {
     <Card className="group overflow-hidden transition-all hover:shadow-lg">
       <div className="relative h-44 w-full overflow-hidden bg-muted">
         {food.image ? (
-          <Image
+          <img
             src={buildImageUrl(food.image)}
             alt={food.itemName}
-            fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
@@ -64,16 +53,16 @@ function FoodCard({ food }: { food: Food }) {
       <CardContent className="p-4">
         <div className="mb-2">
           <h3 className="truncate font-bold text-base">{food.itemName}</h3>
-          {restaurantId ? (
+          {food?.restaurant?._id ? (
             <Link
-              href={`/restaurant/${restaurantId}`}
+              href={`/restaurant/${food?.restaurant?._id}`}
               className="text-xs text-muted-foreground truncate hover:text-primary transition-colors"
             >
-              {restaurantName} · {food.cuisine}
+              {food?.restaurant?.restaurantName} · {food.cuisine}
             </Link>
           ) : (
             <p className="text-xs text-muted-foreground truncate">
-              {restaurantName} · {food.cuisine}
+              {food?.restaurant?.restaurantName} · {food.cuisine}
             </p>
           )}
         </div>

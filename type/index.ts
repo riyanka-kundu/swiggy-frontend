@@ -68,7 +68,7 @@ export interface Food {
   isAvailable: boolean;
   isDeleted: boolean;
   approvalStatus: "pending" | "approved" | "rejected";
-  restaurant: RestaurantListItem | string;
+  restaurant: RestaurantListItem;
   createdAt: Date;
   updatedAt: Date;
 }
