@@ -3,15 +3,20 @@ import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
 const footerLinks = [
   {
     title: "Company",
-    links: ["About us", "Careers", "Partner with us", "Contact"],
-  },
-  {
-    title: "Explore",
-    links: ["Restaurants", "Food delivery", "Groceries", "Dine out"],
+    links: [
+      { label: "About us", href: "/about-us" },
+      { label: "Partner with us", href: "/partner" },
+      { label: "Contact", href: "/contact" },
+    ],
   },
   {
     title: "Support",
-    links: ["Help center", "Privacy policy", "Terms", "Refund policy"],
+    links: [
+      { label: "Help center", href: "/help-center" },
+      { label: "Privacy policy", href: "/privacy-policy" },
+      { label: "Terms", href: "/terms" },
+      { label: "Refund policy", href: "/refund-policy" },
+    ],
   },
 ];
 
@@ -34,7 +39,7 @@ export default function Footer() {
           max-w-6xl
           grid-cols-1
           gap-10
-          md:grid-cols-4
+          md:grid-cols-3
         "
       >
         {/* Brand */}
@@ -139,9 +144,9 @@ export default function Footer() {
 
             <ul className="space-y-3">
               {section.links.map((item) => (
-                <li key={item}>
+                <li key={item.label}>
                   <Link
-                    href="#"
+                    href={item.href}
                     className="
                       text-sm
                       text-muted-foreground
@@ -149,7 +154,7 @@ export default function Footer() {
                       hover:text-foreground
                     "
                   >
-                    {item}
+                    {item.label}
                   </Link>
                 </li>
               ))}

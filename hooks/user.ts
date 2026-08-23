@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 // ============ Food List ============
-export const useUserFoodList = () => {
+export const useUserFoodList = (enabled = true) => {
   return useQuery<Food[]>({
     queryKey: [QUERY_KEY.Food_List],
     queryFn: async () => {
@@ -16,6 +16,8 @@ export const useUserFoodList = () => {
       return res.data.data;
     },
     staleTime: 60 * 1000, // 1 min
+    retry: false,
+    enabled,
   });
 };
 
@@ -30,6 +32,7 @@ export const useUserRestaurantList = () => {
       return res.data.data;
     },
     staleTime: 60 * 1000,
+    retry: false,
   });
 };
 

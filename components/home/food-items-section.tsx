@@ -9,13 +9,14 @@ import { Sparkles } from "lucide-react";
 import { useSelector } from "react-redux";
 
 export default function FoodItemsSection() {
-  const { data: foods, isLoading } = useUserFoodList();
   const { data: authData } = useSelector((state: RootState) => state.auth);
+  const isLoggedInUser = authData?.data?.role === "user";
 
-  // If user is not logged in or loading, or if no foods, handle gracefully
+  const { data: foods, isLoading } = useUserFoodList(isLoggedInUser);
+
   const foodList = Array.isArray(foods) ? foods : [];
 
-  if (!authData || foodList.length === 0) {
+  if (!isLoggedInUser || (!isLoading && foodList.length === 0)) {
     return null;
   }
 

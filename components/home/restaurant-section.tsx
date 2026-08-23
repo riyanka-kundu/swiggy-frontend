@@ -4,12 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUserRestaurantList } from "@/hooks/user";
 import { formatTime } from "@/lib/utils";
-import { RootState } from "@/redux/store/store";
 import { RestaurantListItem } from "@/type";
 import { Clock, MapPin, Store, UtensilsCrossed } from "lucide-react";
 
 import Link from "next/link";
-import { useSelector } from "react-redux";
 
 function getTodaySlot(restaurant: RestaurantListItem) {
   return restaurant.openingClosing?.slots?.[0];
@@ -80,11 +78,10 @@ function RestaurantCard({ restaurant }: { restaurant: RestaurantListItem }) {
 
 export default function RestaurantSection() {
   const { data: restaurants, isLoading } = useUserRestaurantList();
-  const { data: authData } = useSelector((state: RootState) => state.auth);
 
   const restaurantList = Array.isArray(restaurants) ? restaurants : [];
 
-  if (!authData || (!isLoading && restaurantList.length === 0)) {
+  if (!isLoading && restaurantList.length === 0) {
     return null;
   }
 
