@@ -70,13 +70,21 @@ export default function BasicDetails({ form }: Props) {
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="menu-category">Category</FieldLabel>
-                <Input
-                  {...field}
-                  id="menu-category"
-                  aria-invalid={fieldState.invalid}
-                  placeholder="Main Course"
-                  autoComplete="off"
-                />
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger
+                    id="menu-category"
+                    aria-invalid={fieldState.invalid}
+                  >
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Starter">Starter</SelectItem>
+                    <SelectItem value="Main Course">Main Course</SelectItem>
+                    <SelectItem value="Dessert">Dessert</SelectItem>
+                    <SelectItem value="Beverage">Beverage</SelectItem>
+                    <SelectItem value="Snack">Snack</SelectItem>
+                  </SelectContent>
+                </Select>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}

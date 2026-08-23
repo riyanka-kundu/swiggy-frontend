@@ -23,10 +23,29 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
 export const metadata: Metadata = {
   title: "FoodExpress",
-  description: "Food delivery app",
+  description: "FoodExpress - Online Food Delivery",
+
+  icons: {
+    apple: "/apple-touch-icon.png",
+    icon: [
+      {
+        url: "/favicon-32x32.png",
+        type: "image/png",
+        sizes: "32x32",
+      },
+      {
+        url: "/favicon-16x16.png",
+        type: "image/png",
+        sizes: "16x16",
+      },
+    ],
+  },
+  manifest: "/site.webmanifest",
 };
+
 
 export default function RootLayout({
   children,

@@ -12,12 +12,16 @@ import { restaurantDetails } from "@/redux/slice/restaurant-slice";
 import { AppDispatch } from "@/redux/store/store";
 import { restaurantSchema, TRestaurant } from "@/schema/restaurant-schema";
 
+import { useMyRestaurant } from "@/hooks/restaurant-owner";
+import { useEffect } from "react";
+
 type Props = {
   onNext?: () => void;
 };
 
 export default function RestaurantForm({ onNext }: Props) {
   const dispatch = useDispatch<AppDispatch>();
+  const { data: restaurant } = useMyRestaurant();
 
   const form = useForm<TRestaurant>({
     resolver: zodResolver(restaurantSchema),
@@ -35,6 +39,29 @@ export default function RestaurantForm({ onNext }: Props) {
       },
     },
   });
+
+  useEffect(() => {
+    if (restaurant) {
+      const cleanNumber = (num?: string) =>
+        (num || "").replace(/^\+91/, "").replace(/\D/g, "").slice(-10);
+
+      form.reset({
+        ownerName: restaurant.ownerName || "",
+        restaurantName: restaurant.restaurantName || "",
+        location: restaurant.location || "",
+        email: restaurant.email || "",
+        phone: cleanNumber(restaurant.phone),
+        whatsappNumber: cleanNumber(restaurant.whatsappNumber),
+        workingDays: (restaurant.workingDays || []).map((d) => d.toLowerCase()),
+        openingClosing: restaurant.openingClosing || {
+          sameForAllDays: true,
+          slots: [{ open: "10:00", close: "22:00" }],
+        },
+      });
+    }
+  }, [restaurant, form]);
+
+
 
   async function onSubmit(data: TRestaurant) {
     const payload = {

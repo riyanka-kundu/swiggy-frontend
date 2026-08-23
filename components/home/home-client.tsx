@@ -2,12 +2,12 @@
 import HeroSection from "@/components/home/hero-section";
 import HomeNavbar from "@/components/home/navbar";
 
-import CategorySection from "@/components/home/category-section";
 import CTASection from "@/components/home/cta-section";
 import DineOutSection from "@/components/home/dineout-section";
 import FeaturesSection from "@/components/home/feature-section";
+import FoodItemsSection from "@/components/home/food-items-section";
 import Footer from "@/components/home/footer";
-import MartSection from "@/components/home/mart-section";
+import RestaurantSection from "@/components/home/restaurant-section";
 
 export default function HomeClient() {
   return (
@@ -22,20 +22,14 @@ export default function HomeClient() {
       "
     >
       <HomeNavbar />
-
       <HeroSection />
-
       <FeaturesSection />
-
-      <MartSection />
-
+      <RestaurantSection />
+      <FoodItemsSection />
       <DineOutSection />
-
-      <CategorySection />
-
       <CTASection />
-
       <Footer />
     </main>
   );
 }
+

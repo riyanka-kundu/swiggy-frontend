@@ -42,4 +42,9 @@ export const EndPoints = {
     CANCEL: (id: string) => `/orders/${id}/cancel`,
     UPDATE_STATUS: (id: string) => `/orders/${id}/status`,
   },
+  user: {
+    FOOD_LIST: "/user/food_list",
+    RESTAURANT_LIST: "/user/restaurant-list",
+  },
 };
+

@@ -45,7 +45,7 @@ export default function SignUpPage() {
     (state: RootState) => state.auth,
   );
 
-  const [step, setStep] = useState<Step>("register");
+  const step: Step = registerData ? "otp" : "register";
 
   useEffect(() => {
     return () => {
@@ -54,22 +54,12 @@ export default function SignUpPage() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (registerData) {
-      setStep("otp");
-    }
-  }, [registerData]);
-
-  useEffect(() => {
     if (otpData) {
       dispatch(resetAuth());
-
-      setOpen(false);
-
-      setTimeout(() => {
-        router.replace("/signin");
-      }, 200);
+      router.replace("/signin");
     }
   }, [otpData, dispatch, router]);
+
 
   const copy = STEP_CONTENT[step];
 

@@ -9,7 +9,7 @@ import { TLoginPayload } from "@/schema/login";
 import { TVerifyOtpPayload } from "@/schema/otp";
 import { TRegisterPayload } from "@/schema/register";
 
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/lib/constant";
+import { ACCESS_TOKEN, REFRESH_TOKEN, USER_ROLE } from "@/lib/constant";
 import { IApiResponse } from "@/type/auth";
 
 // ================= REGISTER =================
@@ -85,6 +85,15 @@ export const login = createAsyncThunk<
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production",
       });
+
+      if (res.data.data?.role) {
+        cookies.set(USER_ROLE, res.data.data.role, {
+          path: "/",
+          maxAge: 60 * 60 * 24,
+          sameSite: "strict",
+          secure: process.env.NODE_ENV === "production",
+        });
+      }
 
       return res.data;
     } catch (error) {
@@ -166,6 +175,11 @@ export const verifyRestaurantOtp = createAsyncThunk(
         maxAge: 60 * 60 * 24,
       });
 
+      cookies.set(USER_ROLE, "restaurant_owner", {
+        path: "/",
+        maxAge: 60 * 60 * 24,
+      });
+
       return res.data;
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
@@ -218,13 +232,16 @@ const authSlice = createSlice({
     logout: (state) => {
       const cookies = new Cookies();
 
-      cookies.remove(ACCESS_TOKEN);
-
-      cookies.remove(REFRESH_TOKEN);
-
-      cookies.remove("id");
+      cookies.remove(ACCESS_TOKEN, { path: "/" });
+      cookies.remove(REFRESH_TOKEN, { path: "/" });
+      cookies.remove(USER_ROLE, { path: "/" });
+      cookies.remove("id", { path: "/" });
+      cookies.remove("partnerToken", { path: "/" });
+      cookies.remove("partnerRefresh", { path: "/" });
 
       state.data = null;
+      state.registerData = null;
+      state.otpData = null;
     },
 
     resetAuth: (state) => {

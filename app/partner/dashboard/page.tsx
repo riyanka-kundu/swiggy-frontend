@@ -1,7 +1,9 @@
+import MyRestaurant from "@/components/restaurant-owner/my-restaurant";
+
 const page = () => {
   return (
     <div>
-      <p>My restaurant</p>
+      <MyRestaurant />
     </div>
   );
 };

@@ -1,5 +1,7 @@
 "use client";
 
+import { useMyRestaurant } from "@/hooks/restaurant-owner";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -21,6 +23,7 @@ type Props = {
 
 export default function DocumentsForm({ onNext }: Props) {
   const dispatch = useDispatch<AppDispatch>();
+  const { data: restaurant } = useMyRestaurant();
 
   const form = useForm<TRestaurantDoc>({
     resolver: zodResolver(restaurantDocSchema),
@@ -33,6 +36,23 @@ export default function DocumentsForm({ onNext }: Props) {
       fssaiNumber: "",
     },
   });
+
+  useEffect(() => {
+    if (restaurant) {
+      form.reset({
+        outletType: restaurant.outletType || "",
+        pan:
+          restaurant.panNumber ||
+          (restaurant as unknown as { pan?: string }).pan ||
+          "",
+        gstin: restaurant.gstin || "",
+        ifscCode: restaurant.ifscCode || "",
+        bankAccountNumber: restaurant.bankAccountNumber || "",
+        fssaiNumber: restaurant.fssaiNumber || "",
+      });
+    }
+  }, [restaurant, form]);
+
 
   async function onSubmit(data: TRestaurantDoc) {
     try {

@@ -39,42 +39,48 @@ export default function ImageUpload({ form }: Props) {
           <Controller
             name="image"
             control={form.control}
-            render={({ field: { onChange, ref, ...field }, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="menu-image">Item Image</FieldLabel>
-                <input
-                  {...field}
-                  ref={ref}
-                  id="menu-image"
-                  type="file"
-                  accept="image/*"
-                  value={undefined}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] ?? null;
-                    onChange(file);
+            render={({ field, fieldState }) => {
+              const { value, ...fileField } = field;
+              void value;
 
-                    if (file) {
-                      setPreview(URL.createObjectURL(file));
-                    } else {
-                      setPreview(null);
-                    }
-                  }}
-                  className="text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:text-sm file:text-primary-foreground"
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
+              return (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="menu-image">Item Image</FieldLabel>
+                  <input
+                    {...fileField}
+                    ref={field.ref}
+                    id="menu-image"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      field.onChange(file);
 
-                {preview && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={preview}
-                    alt="Food preview"
-                    className="mt-3 h-32 w-32 rounded-md object-cover border"
+                      if (file) {
+                        setPreview(URL.createObjectURL(file));
+                      } else {
+                        setPreview(null);
+                      }
+                    }}
+                    className="text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:text-sm file:text-primary-foreground"
                   />
-                )}
-              </Field>
-            )}
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+
+                  {preview && (
+                    <div className="mt-4 flex max-w-sm rounded-lg border bg-white p-2 shadow-sm">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={preview}
+                        alt="Food preview"
+                        className="h-32 w-32 rounded object-cover shadow-sm"
+                      />
+                    </div>
+                  )}
+                </Field>
+              );
+            }}
           />
         </FieldGroup>
       </CardContent>

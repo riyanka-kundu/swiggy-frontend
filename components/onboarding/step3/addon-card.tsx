@@ -84,7 +84,7 @@ export default function AddOns({ form }: Props) {
                     </FieldLabel>
                     <Input
                       {...field}
-                      value={field.value as number | string}
+                      value={(field.value ?? "") as string | number}
                       id={`addon-price-${index}`}
                       type="number"
                       min={0}

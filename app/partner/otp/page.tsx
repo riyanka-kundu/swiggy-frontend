@@ -8,11 +8,12 @@ import type { AppDispatch, RootState } from "@/redux/store/store";
 import { partnerOtpSchema, TPartnerOtpPayload } from "@/schema/partner-otp";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 
-export default function PartnerOtpPage() {
+function PartnerOtpForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -87,5 +88,13 @@ export default function PartnerOtpPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function PartnerOtpPage() {
+  return (
+    <Suspense>
+      <PartnerOtpForm />
+    </Suspense>
   );
 }

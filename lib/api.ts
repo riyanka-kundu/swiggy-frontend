@@ -4,6 +4,7 @@ import axios from "axios";
 import { Cookies } from "react-cookie";
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  withCredentials: true,
 });
 
 const cookies = new Cookies();
@@ -36,9 +37,13 @@ axiosInstance.interceptors.response.use(
       !isAuthRoute
     ) {
       originalRequest._retry = true;
-      try {
-        const refresh = cookies.get(REFRESH_TOKEN);
+      const refresh = cookies.get(REFRESH_TOKEN);
 
+      if (!refresh) {
+        return Promise.reject(error);
+      }
+
+      try {
         const { data, status } = await axios.post(
           `${process.env.NEXT_PUBLIC_BASE_URL}${EndPoints.auth.REFRESH}`,
           { refreshToken: refresh },
@@ -53,8 +58,6 @@ axiosInstance.interceptors.response.use(
         cookies.set(ACCESS_TOKEN, newAccessToken, {
           path: "/",
           maxAge: 60 * 60 * 24,
-          //? This tells the browser:
-          // “Only send this cookie over HTTPS connections when its true.”
           secure: process.env.NODE_ENV === "production",
           sameSite: "strict",
         });
@@ -69,11 +72,20 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         console.log(refreshError);
-        cookies.remove(ACCESS_TOKEN);
-        cookies.remove(REFRESH_TOKEN);
+        cookies.remove(ACCESS_TOKEN, { path: "/" });
+        cookies.remove(REFRESH_TOKEN, { path: "/" });
 
-        if (window.location.pathname !== "/login") {
-          window.location.href = "/login";
+        const publicRoutes = ["/", "/signin", "/signup", "/partner"];
+        const isPublicPage =
+          typeof window !== "undefined" &&
+          publicRoutes.some(
+            (route) =>
+              window.location.pathname === route ||
+              (route !== "/" && window.location.pathname.startsWith(route)),
+          );
+
+        if (!isPublicPage && typeof window !== "undefined") {
+          window.location.href = "/signin";
         }
 
         return Promise.reject(refreshError);

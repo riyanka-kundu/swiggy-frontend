@@ -79,11 +79,33 @@ export default function AgreementCard({ form }: Props) {
             )}
           />
 
+          {/* Place */}
+          <Controller
+            name="place"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className="md:col-span-2">
+                <FieldLabel htmlFor="contract-place">Place / City</FieldLabel>
+                <Input
+                  {...field}
+                  id="contract-place"
+                  aria-invalid={fieldState.invalid}
+                  placeholder="Kolkata, West Bengal"
+                  autoComplete="off"
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+
           <div className="rounded-md border bg-muted/40 p-4 text-sm text-muted-foreground md:col-span-2">
             By proceeding, you confirm that the details entered above are
             accurate and that you are authorized to enter into this partnership
             agreement on behalf of the restaurant.
           </div>
+
         </FieldGroup>
       </CardContent>
     </Card>

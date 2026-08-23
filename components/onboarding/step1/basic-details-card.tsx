@@ -171,8 +171,7 @@ export default function BasicDetailsCard({ form }: Props) {
                   {...field}
                   id="basic-details-phone"
                   type="tel"
-                  inputMode="numeric"
-                  maxLength={10}
+                  maxLength={13}
                   aria-invalid={fieldState.invalid}
                   placeholder="9876543210"
                   autoComplete="off"
@@ -203,13 +202,13 @@ export default function BasicDetailsCard({ form }: Props) {
                   {...field}
                   id="basic-details-whatsapp"
                   type="tel"
-                  inputMode="numeric"
-                  maxLength={10}
+                  maxLength={13}
                   aria-invalid={fieldState.invalid}
                   placeholder="9876543210"
                   autoComplete="off"
                   className="h-11 rounded-lg border-border bg-background px-3.5 text-sm shadow-none transition focus-visible:ring-2"
                 />
+
 
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />

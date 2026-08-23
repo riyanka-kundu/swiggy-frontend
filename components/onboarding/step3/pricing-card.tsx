@@ -43,7 +43,7 @@ export default function Price({ form }: Props) {
                 <FieldLabel htmlFor="menu-base-price">Base Price</FieldLabel>
                 <Input
                   {...field}
-                  value={field.value as number | string}
+                  value={(field.value ?? "") as string | number}
                   id="menu-base-price"
                   type="number"
                   min={0}
@@ -69,7 +69,7 @@ export default function Price({ form }: Props) {
                 </FieldLabel>
                 <Input
                   {...field}
-                  value={field.value as string}
+                  value={(field.value ?? "") as string | number}
                   id="menu-discount-price"
                   type="number"
                   min={0}
@@ -93,7 +93,7 @@ export default function Price({ form }: Props) {
                 <FieldLabel htmlFor="menu-gst">GST (%)</FieldLabel>
                 <Input
                   {...field}
-                  value={field.value as number | string}
+                  value={(field.value ?? "") as string | number}
                   id="menu-gst"
                   type="number"
                   min={0}
@@ -120,7 +120,7 @@ export default function Price({ form }: Props) {
                   </FieldLabel>
                   <Input
                     {...field}
-                    value={field.value as number | string}
+                    value={(field.value ?? "") as string | number}
                     id="menu-prep-time-min"
                     type="number"
                     min={0}
@@ -144,7 +144,7 @@ export default function Price({ form }: Props) {
                   </FieldLabel>
                   <Input
                     {...field}
-                    value={field.value as number | string}
+                    value={(field.value ?? "") as string | number}
                     id="menu-prep-time-max"
                     type="number"
                     min={0}

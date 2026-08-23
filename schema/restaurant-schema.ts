@@ -25,12 +25,13 @@ export const restaurantSchema = z.object({
   phone: z
     .string()
     .min(1, "Phone number is required")
-    .regex(/^[0-9]{10}$/, "Phone number must be 10 digits"),
+    .regex(/^(\+91)?[0-9]{10}$/, "Phone number must be 10 digits"),
 
   whatsappNumber: z
     .string()
     .min(1, "WhatsApp number is required")
-    .regex(/^[0-9]{10}$/, "WhatsApp number must be 10 digits"),
+    .regex(/^(\+91)?[0-9]{10}$/, "WhatsApp number must be 10 digits"),
+
 
   workingDays: z.array(z.string()).min(1, "Select at least one working day"),
 
@@ -79,14 +80,12 @@ export const menuSchema = z.object({
 
   gst: z.coerce.number().min(0, "GST is required"),
 
-  variants: z
-    .array(
-      z.object({
-        name: z.string().min(1, "Variant name is required"),
-        price: z.coerce.number(),
-      }),
-    )
-    .min(1, "At least one variant is required"),
+  variants: z.array(
+    z.object({
+      name: z.string().min(1, "Variant name is required"),
+      price: z.coerce.number(),
+    }),
+  ).optional().default([]),
 
   addons: z.array(
     z.object({
@@ -117,10 +116,13 @@ export const contractSchema = z.object({
 
   designation: z.string().min(1, "Designation is required"),
 
+  place: z.string().min(1, "Place / City is required"),
+
   agreed: z.boolean().refine((value) => value === true, {
     message: "You must accept all terms to proceed",
   }),
 });
+
 
 export type TApplyRestaurant = z.infer<typeof applyRestaurantSchema>;
 

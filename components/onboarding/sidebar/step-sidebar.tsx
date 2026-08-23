@@ -1,6 +1,7 @@
 "use client";
 
 import StepItem from "@/components/onboarding/sidebar/step-item";
+import { useMyRestaurant } from "@/hooks/restaurant-owner";
 import { UtensilsCrossed } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
@@ -30,12 +31,23 @@ const steps = [
 
 export default function StepSidebar() {
   const pathname = usePathname();
+  const { data: restaurant } = useMyRestaurant();
+
+  // Backend onboardingStep tells us how far the user has progressed.
+  // Steps completed = onboardingStep (e.g. onboardingStep=3 means steps 1,2,3 are done).
+  // If contract is accepted, all 4 steps are done.
+  const backendStep = useMemo(() => {
+    if (restaurant?.contract?.accepted) return 5; // all done
+    return (restaurant?.onboardingStep ?? 0) + 1;
+  }, [restaurant]);
 
   const currentStep = useMemo(() => {
     const activeStep = steps.find((step) => pathname.startsWith(step.href));
-
     return activeStep?.step ?? 1;
   }, [pathname]);
+
+  // Use the higher of URL-derived step and backend step for completion tracking
+  const effectiveStep = Math.max(currentStep, backendStep);
 
   return (
     <aside className="sticky top-20 h-fit w-full rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
@@ -59,7 +71,7 @@ export default function StepSidebar() {
           <StepItem
             key={step.step}
             step={step.step}
-            currentStep={currentStep}
+            currentStep={effectiveStep}
             title={step.title}
             href={step.href}
             isLast={idx === steps.length - 1}
