@@ -4,16 +4,14 @@ import HomeNavbar from "@/components/home/navbar";
 import FoodCard from "@/components/home/food-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  useUserFoodList,
-  useUserRestaurantList,
-} from "@/hooks/user";
+import { useRestaurantFoods } from "@/hooks/user";
 import { formatTime } from "@/lib/utils";
-import { RestaurantListItem } from "@/type";
+import { RootState } from "@/redux/store/store";
 import {
   ArrowLeft,
   Clock,
   Loader2,
+  LogIn,
   MapPin,
   SearchX,
   Store,
@@ -21,6 +19,7 @@ import {
 } from "lucide-react";
 
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 function getInitials(name: string) {
   return name
@@ -35,27 +34,42 @@ export default function RestaurantDetail({
 }: {
   restaurantId: string;
 }) {
-  const { data: restaurants, isLoading: loadingRestaurants } =
-    useUserRestaurantList();
-  const { data: foods, isLoading: loadingFoods } = useUserFoodList();
+  const { data: authData } = useSelector((state: RootState) => state.auth);
+  const isLoggedInUser = authData?.data?.role === "user";
 
-  const restaurant = (restaurants ?? []).find((r) => r._id === restaurantId);
+  const { data, isLoading, isError } = useRestaurantFoods(
+    restaurantId,
+    isLoggedInUser,
+  );
 
-  const restaurantFoods = (foods ?? []).filter((food) => {
-    if (typeof food.restaurant !== "object" || !food.restaurant) return false;
-    return food.restaurant._id === restaurantId;
-  });
+  const info = data?.restaurant;
+  const foods = data?.foods ?? [];
 
-  const fallbackFromFood = restaurantFoods.find(
-    (food) => typeof food.restaurant === "object",
-  )?.restaurant as RestaurantListItem | undefined;
+  if (!isLoggedInUser) {
+    return (
+      <main className="min-h-screen bg-background">
+        <HomeNavbar />
+        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+            <LogIn className="h-10 w-10 text-muted-foreground" />
+          </div>
+          <h2 className="text-xl font-bold">Sign in to view this menu</h2>
+          <p className="max-w-xs text-sm text-muted-foreground">
+            Create an account or sign in to explore dishes from this
+            restaurant.
+          </p>
+          <Link href="/signin">
+            <Button className="mt-2">
+              <LogIn className="mr-2 h-4 w-4" />
+              Sign in
+            </Button>
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
-  const info = restaurant ?? fallbackFromFood;
-
-  const slot = info?.openingClosing?.slots?.[0];
-  const isOpen = Boolean(info?.isOpen);
-
-  if (!loadingRestaurants && !loadingFoods && !info) {
+  if (!isLoading && (!info || isError)) {
     return (
       <main className="min-h-screen bg-background">
         <HomeNavbar />
@@ -77,6 +91,9 @@ export default function RestaurantDetail({
       </main>
     );
   }
+
+  const slot = info?.openingClosing?.slots?.[0];
+  const isOpen = Boolean(info?.isOpen);
 
   return (
     <main className="min-h-screen bg-background">
@@ -148,10 +165,9 @@ export default function RestaurantDetail({
             )}
           </div>
 
-          {!loadingFoods && (
+          {!isLoading && (
             <Badge variant="outline" className="sm:ml-auto shrink-0">
-              {restaurantFoods.length} dish
-              {restaurantFoods.length !== 1 && "es"}
+              {foods.length} dish{foods.length !== 1 && "es"}
             </Badge>
           )}
         </div>
@@ -166,13 +182,13 @@ export default function RestaurantDetail({
           <h2 className="text-2xl font-black md:text-3xl">What&apos;s cooking</h2>
         </div>
 
-        {loadingFoods ? (
+        {isLoading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="h-64 animate-pulse rounded-2xl bg-muted" />
             ))}
           </div>
-        ) : restaurantFoods.length === 0 ? (
+        ) : foods.length === 0 ? (
           <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 text-center">
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
               <UtensilsCrossed className="h-10 w-10 text-muted-foreground" />
@@ -184,7 +200,7 @@ export default function RestaurantDetail({
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {restaurantFoods.map((food) => (
+            {foods.map((food) => (
               <FoodCard key={food._id} food={food} />
             ))}
           </div>

@@ -36,14 +36,43 @@ export const useUserRestaurantList = () => {
   });
 };
 
+// ============ Foods by Restaurant ============
+export const useRestaurantFoods = (
+  restaurantId: string,
+  enabled = true,
+) => {
+  return useQuery<{ restaurant: RestaurantListItem; foods: Food[] }>({
+    queryKey: [QUERY_KEY.Restaurant_Foods, restaurantId],
+    queryFn: async () => {
+      const res = await axiosInstance.get<{
+        restaurant: RestaurantListItem;
+        foods: Food[];
+      }>(EndPoints.user.RESTAURANT_FOODS(restaurantId));
+      return { restaurant: res.data.restaurant, foods: res.data.foods };
+    },
+    enabled: enabled && Boolean(restaurantId),
+    staleTime: 60 * 1000,
+    retry: false,
+  });
+};
+
 // ============ Cart ============
 export const useCart = (enabled = true) => {
   return useQuery<Cart | null>({
     queryKey: [QUERY_KEY.Cart],
     queryFn: async () => {
       try {
-        const res = await axiosInstance.get<{ data: Cart }>(EndPoints.cart.LIST);
-        return res.data.data;
+        const res = await axiosInstance.get<{ data: Cart | [] }>(
+          EndPoints.cart.LIST,
+        );
+        const data = res.data.data;
+
+        // Backend returns [] when no cart exists and null after clearing it
+        if (!data || Array.isArray(data) || !Array.isArray(data.items)) {
+          return null;
+        }
+
+        return data;
       } catch (err: unknown) {
         const error = err as { response?: { status: number } };
         if (

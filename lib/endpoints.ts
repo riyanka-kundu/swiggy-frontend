@@ -45,6 +45,7 @@ export const EndPoints = {
   user: {
     FOOD_LIST: "/user/food_list",
     RESTAURANT_LIST: "/user/restaurant-list",
+    RESTAURANT_FOODS: (id: string) => `/user/restaurant/${id}/foods`,
   },
 };
 
