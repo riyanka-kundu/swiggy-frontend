@@ -30,7 +30,7 @@ function FoodCard({ food }: { food: Food }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   return (
-    <Card className="overflow-hidden pt-0 transition-shadow hover:shadow-md">
+    <Card className="overflow-hidden pt-0! transition-shadow hover:shadow-md">
       {/* Image */}
       <div className="relative h-40 w-full sm:h-44">
         {food.image ? (
@@ -117,7 +117,9 @@ function FoodCard({ food }: { food: Food }) {
         {/* Prices */}
         <div className="flex items-baseline gap-2">
           <span className="text-base font-bold">
-            {food.discountPrice > 0 ? formatPrice(food.discountPrice) : formatPrice(food.basePrice)}
+            {food.discountPrice > 0
+              ? formatPrice(food.discountPrice)
+              : formatPrice(food.basePrice)}
           </span>
           {food.discountPrice > 0 && (
             <span className="text-sm text-muted-foreground line-through">
@@ -130,11 +132,12 @@ function FoodCard({ food }: { food: Food }) {
         <div className="flex flex-wrap items-center gap-2 pt-0.5">
           <button
             onClick={() => toggle(food._id)}
-              disabled={toggling}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${food.isAvailable
-              ? "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-950 dark:text-green-400"
-              : "bg-muted text-muted-foreground hover:bg-muted/70"
-              }`}
+            disabled={toggling}
+            className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+              food.isAvailable
+                ? "bg-green-100 text-green-700 hover:bg-green-200"
+                : "bg-muted text-muted-foreground hover:bg-muted/70"
+            }`}
           >
             {toggling ? (
               <Loader2 className="h-3 w-3 animate-spin" />
@@ -154,7 +157,9 @@ function FoodCard({ food }: { food: Food }) {
 export default function MenuPage() {
   const { data: foods, isLoading, error } = useMenuList();
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<"all" | "available" | "unavailable">("all");
+  const [filter, setFilter] = useState<"all" | "available" | "unavailable">(
+    "all",
+  );
 
   const filtered = (foods ?? []).filter((f) => {
     const matchesSearch = f.itemName
@@ -202,10 +207,11 @@ export default function MenuPage() {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-colors ${filter === f
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/70"
-                  }`}
+                className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
+                  filter === f
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted/70"
+                }`}
               >
                 {f}
               </button>
@@ -251,7 +257,6 @@ export default function MenuPage() {
           </CardContent>
         </Card>
       ) : (
-
         <>
           <p className="text-sm text-muted-foreground">
             {filtered.length} item{filtered.length !== 1 ? "s" : ""}

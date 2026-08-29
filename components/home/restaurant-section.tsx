@@ -25,21 +25,23 @@ function RestaurantCard({ restaurant }: { restaurant: RestaurantListItem }) {
 
   return (
     <Link href={`/restaurant/${restaurant._id}`} className="group">
-      <Card className="h-full overflow-hidden transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-        <div className="relative flex h-32 items-center justify-center bg-gradient-to-br from-primary/15 via-primary/5 to-transparent sm:h-32">
+      <Card className="h-full overflow-hidden pt-0! transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
+        <div className="relative flex h-32 items-center justify-center bg-linear-to-br from-primary/15 via-primary/5 to-transparent sm:h-32">
           <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-xl font-black text-primary-foreground shadow-md transition-transform duration-300 group-hover:scale-110">
             {initials || <UtensilsCrossed className="h-7 w-7" />}
           </span>
 
           <span
-            className={`absolute right-3 top-3 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm ${isOpen
+            className={`absolute right-3 top-3 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm ${
+              isOpen
                 ? "bg-green-600 text-white"
                 : "bg-muted text-muted-foreground"
-              }`}
+            }`}
           >
             <span
-              className={`h-1.5 w-1.5 rounded-full ${isOpen ? "animate-pulse bg-white" : "bg-muted-foreground"
-                }`}
+              className={`h-1.5 w-1.5 rounded-full ${
+                isOpen ? "animate-pulse bg-white" : "bg-muted-foreground"
+              }`}
             />
             {isOpen ? "Open now" : "Closed"}
           </span>
@@ -62,7 +64,10 @@ function RestaurantCard({ restaurant }: { restaurant: RestaurantListItem }) {
               </Badge>
             )}
             {slot && (
-              <Badge variant="outline" className="text-[10px] font-normal whitespace-nowrap">
+              <Badge
+                variant="outline"
+                className="text-[10px] font-normal whitespace-nowrap"
+              >
                 <Clock className="mr-1 h-2.5 w-2.5 shrink-0" />
                 {formatTime(slot.open)} - {formatTime(slot.close)}
               </Badge>

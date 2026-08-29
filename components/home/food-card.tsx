@@ -19,7 +19,7 @@ function FoodCard({ food }: { food: Food }) {
     food.discountPrice > 0 ? food.discountPrice : food.basePrice;
 
   return (
-    <Card className="group overflow-hidden transition-all hover:shadow-lg">
+    <Card className="group overflow-hidden !pt-0 transition-all hover:shadow-lg">
       <div className="relative h-44 w-full overflow-hidden bg-muted">
         {food.image ? (
           <img
