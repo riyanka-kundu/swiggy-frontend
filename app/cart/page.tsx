@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+import HomeNavbar from "@/components/home/navbar";
 import { Separator } from "@/components/ui/separator";
 import { useAddToCart, useCart, usePlaceOrder, useRemoveFromCart } from "@/hooks/user";
 import { buildImageUrl, formatPrice } from "@/lib/utils";
@@ -255,6 +256,7 @@ function CartContent() {
 export default function CartPage() {
   return (
     <main className="min-h-screen bg-background">
+      <HomeNavbar />
       <CartContent />
     </main>
   );

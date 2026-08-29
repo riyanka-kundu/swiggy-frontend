@@ -16,6 +16,7 @@ import {
   LayoutDashboard,
   Loader2,
   LogOut,
+  ReceiptText,
   ShoppingCart,
   User,
   UtensilsCrossed,
@@ -76,16 +77,15 @@ export default function HomeNavbar() {
           FoodExpress
         </Link>
 
-        {/* Menu */}
-        <div className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
-          <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
-          <Link href="/partner" className="hover:text-foreground transition-colors">Partner with us</Link>
-          <Link href="#" className="hover:text-foreground transition-colors">Get the app</Link>
-          <ModeToggle />
-        </div>
-
         {/* Right side */}
         <div className="flex items-center gap-3">
+          <Link
+            href="/partner"
+            className="hidden items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground md:flex"
+          >
+            Partner with us
+          </Link>
+
           {loading ? (
             <button
               disabled
@@ -138,6 +138,16 @@ export default function HomeNavbar() {
                           Dashboard
                         </Link>
                       )}
+                      {role === "user" && (
+                        <Link
+                          href="/my-orders"
+                          onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm hover:bg-accent"
+                        >
+                          <ReceiptText className="h-4 w-4" />
+                          My Orders
+                        </Link>
+                      )}
                       <button
                         onClick={() => {
                           setDropdownOpen(false);
@@ -161,6 +171,7 @@ export default function HomeNavbar() {
               Sign in
             </button>
           )}
+          <ModeToggle />
         </div>
       </nav>
 

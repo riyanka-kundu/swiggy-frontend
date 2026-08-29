@@ -8,18 +8,17 @@ import {
   useRestaurantOrders,
   useUpdateOrderStatus,
 } from "@/hooks/restaurant-owner";
-import { formatDate, formatPrice } from "@/lib/utils";
+import { formatDate, formatPrice, buildImageUrl } from "@/lib/utils";
 import { Order } from "@/type";
 import {
   AlertTriangle,
   CheckCircle2,
   Clock,
   Loader2,
-  MapPin,
   Package,
   ShoppingBag,
   Truck,
-  User,
+  UtensilsCrossed,
   XCircle,
 } from "lucide-react";
 import { useState } from "react";
@@ -28,13 +27,13 @@ const STATUS_CONFIG: Record<
   Order["status"],
   { label: string; color: string; icon: React.ElementType }
 > = {
-  pending: {
-    label: "Pending",
+  placed: {
+    label: "Placed",
     color: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300",
     icon: Clock,
   },
-  confirmed: {
-    label: "Confirmed",
+  accepted: {
+    label: "Accepted",
     color: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300",
     icon: CheckCircle2,
   },
@@ -61,8 +60,8 @@ const STATUS_CONFIG: Record<
 };
 
 const NEXT_STATUS: Partial<Record<Order["status"], Order["status"]>> = {
-  pending: "confirmed",
-  confirmed: "preparing",
+  placed: "accepted",
+  accepted: "preparing",
   preparing: "out_for_delivery",
   out_for_delivery: "delivered",
 };
@@ -76,10 +75,6 @@ export default function RestaurantOrdersPage() {
 
   const filteredOrders = orderList.filter((order) => {
     if (activeTab === "all") return true;
-    if (activeTab === "active")
-      return ["pending", "confirmed", "preparing", "out_for_delivery"].includes(
-        order.status,
-      );
     return order.status === activeTab;
   });
 
@@ -99,9 +94,8 @@ export default function RestaurantOrdersPage() {
       <div className="flex flex-wrap gap-2">
         {[
           { id: "all", label: "All Orders" },
-          { id: "active", label: "Active" },
-          { id: "pending", label: "Pending" },
-          { id: "confirmed", label: "Confirmed" },
+          { id: "placed", label: "Placed" },
+          { id: "accepted", label: "Accepted" },
           { id: "preparing", label: "Preparing" },
           { id: "out_for_delivery", label: "Out for Delivery" },
           { id: "delivered", label: "Delivered" },
@@ -142,18 +136,18 @@ export default function RestaurantOrdersPage() {
           <CardContent className="flex flex-col items-center gap-3 py-16 text-center">
             <ShoppingBag className="h-12 w-12 text-muted-foreground" />
             <p className="font-medium">No orders found</p>
-            <p className="text-xs text-muted-foreground">
+            <p className="max-w-sm text-xs text-muted-foreground">
               {activeTab === "all"
                 ? "Incoming orders from customers will show up here in real time."
-                : `No orders with status "${activeTab}".`}
+                : `There are no ${STATUS_CONFIG[activeTab as Order["status"]]?.label.toLowerCase() ?? activeTab} orders yet. New orders in this stage will appear here.`}
             </p>
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-4">
+        <div className="grid gap-4 xl:grid-cols-2">
           {filteredOrders.map((order) => {
             const statusInfo =
-              STATUS_CONFIG[order.status] || STATUS_CONFIG.pending;
+              STATUS_CONFIG[order.status] || STATUS_CONFIG.placed;
             const StatusIcon = statusInfo.icon;
             const nextStatus = NEXT_STATUS[order.status];
 
@@ -195,16 +189,28 @@ export default function RestaurantOrdersPage() {
 
                 <CardContent className="space-y-4 pt-4">
                   {/* Customer Info & Address */}
-                  <div className="grid gap-2 text-sm sm:grid-cols-2">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <User className="h-4 w-4 shrink-0 text-foreground" />
-                      <span>{userName}</span>
+                  <div className="flex flex-wrap items-start gap-x-6 gap-y-2 rounded-xl border bg-muted/20 p-3 text-sm">
+                    <div className="flex min-w-0 flex-col gap-0.5">
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                        Customer
+                      </span>
+                      <span className="truncate font-medium">{userName}</span>
+                      {typeof order.user === "object" &&
+                        order.user?.email && (
+                          <span className="truncate text-muted-foreground">
+                            {order.user.email}
+                          </span>
+                        )}
                     </div>
 
                     {order.address && (
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <MapPin className="h-4 w-4 shrink-0 text-foreground" />
-                        <span className="truncate">{order.address}</span>
+                      <div className="min-w-0 flex-1">
+                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                          Delivery Address
+                        </span>
+                        <p className="truncate text-muted-foreground">
+                          {order.address}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -212,23 +218,49 @@ export default function RestaurantOrdersPage() {
                   <Separator />
 
                   {/* Items List */}
-                  <div className="space-y-2">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Items Ordered
+                  <div>
+                    <p className="mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Items Ordered ({order.items?.length || 0})
                     </p>
-                    <div className="divide-y rounded-lg border bg-muted/10">
+                    <div className="divide-y rounded-xl border bg-card">
                       {order.items?.map((item, idx) => (
                         <div
-                          key={idx}
-                          className="flex items-center justify-between px-3 py-2 text-sm"
+                          key={item._id || idx}
+                          className="flex items-center gap-3 p-3"
                         >
-                          <span className="font-medium">
-                            {item.quantity}x{" "}
-                            {item.food?.itemName || "Food item"}
-                          </span>
-                          <span className="font-semibold">
-                            {formatPrice(item.price * item.quantity)}
-                          </span>
+                          <div className="relative shrink-0">
+                            {item.food?.image ? (
+                              <img
+                                src={buildImageUrl(item.food.image)}
+                                alt={item.food.itemName || "Food"}
+                                className="h-12 w-12 rounded-lg object-cover"
+                              />
+                            ) : (
+                              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
+                                <UtensilsCrossed className="h-5 w-5 text-muted-foreground" />
+                              </div>
+                            )}
+                            <span
+                              className={`absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 border-card ${
+                                item.food?.isVeg ? "bg-green-500" : "bg-red-500"
+                              }`}
+                            />
+                          </div>
+
+                          <div className="flex flex-1 items-center justify-between gap-3">
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-medium">
+                                {item.food?.itemName || "Food item"}
+                              </p>
+                              <p className="text-xs text-muted-foreground capitalize">
+                                {item.quantity} × {formatPrice(item.price)}
+                              </p>
+                            </div>
+
+                            <span className="shrink-0 text-sm font-semibold">
+                              {formatPrice(item.price * item.quantity)}
+                            </span>
+                          </div>
                         </div>
                       ))}
                     </div>

@@ -2,24 +2,24 @@
 
 import {
   Building2,
-  CalendarDays,
   CheckCircle2,
   Clock3,
   FileCheck2,
   FileText,
   Landmark,
+  Loader2,
   Mail,
   MapPin,
   Pencil,
   Phone,
-  ShieldCheck,
+  Power,
   TrendingUp,
   UserRound,
   WalletCards,
   XCircle,
 } from "lucide-react";
 
-import { useMyRestaurant } from "@/hooks/restaurant-owner";
+import { useToggleRestaurantStatus, useMyRestaurant } from "@/hooks/restaurant-owner";
 
 import { InfoItem } from "@/components/restaurant-owner/info-item";
 import { SectionHeader } from "@/components/restaurant-owner/section-header";
@@ -33,10 +33,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
 import {
   DAYS,
-  formatDate,
   formatDay,
   formatTime,
   maskAccountNumber,
@@ -46,6 +44,8 @@ import Link from "next/link";
 const MyRestaurant = () => {
 
   const { data: restaurant, isLoading, error } = useMyRestaurant();
+  const { mutate: toggleStatus, isPending: toggling } =
+    useToggleRestaurantStatus();
 
   if (isLoading) {
     return (
@@ -141,8 +141,6 @@ const MyRestaurant = () => {
 
   const openingClosing = restaurant.openingClosing;
 
-  const contract = restaurant.contract;
-
   const slots = openingClosing?.slots ?? [];
 
   const isSameForAllDays = openingClosing?.sameForAllDays;
@@ -220,12 +218,28 @@ const MyRestaurant = () => {
             </div>
           </div>
 
-          <Link href="/partner/onboarding/restaurant">
-            <Button className="w-full sm:w-auto">
-              <Pencil className="mr-2 size-4" />
-              Edit Restaurant
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Link href="/partner/onboarding/restaurant">
+              <Button className="w-full sm:w-auto">
+                <Pencil className="mr-2 size-4" />
+                Edit Restaurant
+              </Button>
+            </Link>
+
+            <Button
+              onClick={() => toggleStatus(!restaurant.isOpen)}
+              disabled={toggling}
+              variant={restaurant.isOpen ? "destructive" : "default"}
+              className="w-full sm:w-auto"
+            >
+              {toggling ? (
+                <Loader2 className="mr-2 size-4 animate-spin" />
+              ) : (
+                <Power className="mr-2 size-4" />
+              )}
+              {restaurant.isOpen ? "Close Restaurant" : "Open Restaurant"}
             </Button>
-          </Link>
+          </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
@@ -334,20 +348,16 @@ const MyRestaurant = () => {
                 </div>
               </div>
 
-              <Link
-                href={
-                  isFullyOnboarded
-                    ? "/partner/onboarding/restaurant"
-                    : getStepRoute(restaurant.onboardingStep)
-                }
-                className="block w-full"
-              >
-                <Button variant="outline" className="w-full">
-                  {isFullyOnboarded
-                    ? "Review Onboarding Details"
-                    : "Continue Setup"}
-                </Button>
-              </Link>
+              {!isFullyOnboarded && (
+                <Link
+                  href={getStepRoute(restaurant.onboardingStep)}
+                  className="block w-full"
+                >
+                  <Button variant="outline" className="w-full">
+                    Continue Setup
+                  </Button>
+                </Link>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -433,77 +443,42 @@ const MyRestaurant = () => {
           </CardContent>
         </Card>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* Working Days */}
+        {/* Business Details */}
+        <Card>
+          <CardHeader>
+            <SectionHeader
+              icon={FileText}
+              title="Business Details"
+              description="Legal and registration information"
+            />
+          </CardHeader>
 
-          <Card>
-            <CardHeader>
-              <SectionHeader
-                icon={CalendarDays}
-                title="Working Days"
-                description="Days your restaurant operates"
-              />
-            </CardHeader>
+          <CardContent className="grid gap-5 sm:grid-cols-2">
+            <InfoItem
+              icon={FileCheck2}
+              label="FSSAI Number"
+              value={restaurant.fssaiNumber}
+            />
 
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {DAYS.map((day) => {
-                  const isOpen = workingDays.includes(day);
+            <InfoItem
+              icon={FileText}
+              label="GSTIN"
+              value={restaurant.gstin}
+            />
 
-                  return (
-                    <Badge
-                      key={day}
-                      variant={isOpen ? "default" : "secondary"}
-                      className="px-3 py-1.5"
-                    >
-                      {isOpen && <CheckCircle2 className="mr-1.5 size-3.5" />}
+            <InfoItem
+              icon={FileText}
+              label="PAN Number"
+              value={restaurant.panNumber}
+            />
 
-                      {formatDay(day)}
-                    </Badge>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Business Details */}
-
-          <Card>
-            <CardHeader>
-              <SectionHeader
-                icon={FileText}
-                title="Business Details"
-                description="Legal and registration information"
-              />
-            </CardHeader>
-
-            <CardContent className="grid gap-5 sm:grid-cols-2">
-              <InfoItem
-                icon={FileCheck2}
-                label="FSSAI Number"
-                value={restaurant.fssaiNumber}
-              />
-
-              <InfoItem
-                icon={FileText}
-                label="GSTIN"
-                value={restaurant.gstin}
-              />
-
-              <InfoItem
-                icon={FileText}
-                label="PAN Number"
-                value={restaurant.panNumber}
-              />
-
-              <InfoItem
-                icon={Landmark}
-                label="IFSC Code"
-                value={restaurant.ifscCode}
-              />
-            </CardContent>
-          </Card>
-        </div>
+            <InfoItem
+              icon={Landmark}
+              label="IFSC Code"
+              value={restaurant.ifscCode}
+            />
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader className="border-b bg-muted/30">
@@ -528,174 +503,6 @@ const MyRestaurant = () => {
             />
           </CardContent>
         </Card>
-
-        <Card>
-          <CardHeader className="border-b bg-muted/30">
-            <SectionHeader
-              icon={ShieldCheck}
-              title="Contract & Agreement"
-              description="Restaurant owner agreement information"
-            />
-          </CardHeader>
-
-          <CardContent className="space-y-6 pt-6">
-            {/* Contract Status */}
-
-            <div className="flex flex-col gap-4 rounded-xl border bg-muted/20 p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3">
-                <div
-                  className={`flex size-10 items-center justify-center rounded-full ${contract?.accepted
-                    ? "bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400"
-                    : "bg-primary/10 text-primary"
-                    }`}
-                >
-                  {contract?.accepted ? (
-                    <CheckCircle2 className="size-5" />
-                  ) : (
-                    <Clock3 className="size-5" />
-                  )}
-                </div>
-
-                <div>
-                  <p className="font-medium">
-                    Contract {contract?.accepted ? "accepted" : "pending"}
-                  </p>
-
-                  <p className="text-xs text-muted-foreground">
-                    Version {contract?.contractVersion || "Not available"}
-                  </p>
-                </div>
-              </div>
-
-              <Badge
-                variant={contract?.accepted ? "default" : "secondary"}
-                className={
-                  contract?.accepted ? "bg-green-600 hover:bg-green-600" : ""
-                }
-              >
-                {contract?.accepted ? "Accepted" : "Pending"}
-              </Badge>
-            </div>
-
-            <Separator />
-
-            {/* Signatory */}
-
-            <div className="grid gap-6 sm:grid-cols-3">
-              <InfoItem
-                icon={UserRound}
-                label="Signatory"
-                value={contract?.signatory?.fullName}
-              />
-
-              <InfoItem
-                icon={FileText}
-                label="Designation"
-                value={contract?.signatory?.designation}
-              />
-
-              <InfoItem
-                icon={MapPin}
-                label="Place"
-                value={contract?.signatory?.place}
-              />
-            </div>
-
-            {/* Contract Metadata */}
-
-            <div className="grid gap-6 sm:grid-cols-2">
-              <InfoItem
-                icon={CalendarDays}
-                label="Accepted On"
-                value={formatDate(contract?.acceptedAt)}
-              />
-
-              <InfoItem
-                icon={ShieldCheck}
-                label="Contract Version"
-                value={contract?.contractVersion}
-              />
-            </div>
-
-            {/* Reviewed Sections */}
-
-            <div className="rounded-lg border p-4">
-              <p className="text-sm font-medium">Reviewed Sections</p>
-
-              {contract?.reviewedSections?.length ? (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {contract?.reviewedSections.map((section) => (
-                    <Badge key={section} variant="outline">
-                      <CheckCircle2 className="mr-1 size-3" />
-
-                      {section}
-                    </Badge>
-                  ))}
-                </div>
-              ) : (
-                <p className="mt-3 text-sm text-muted-foreground">
-                  No reviewed sections available.
-                </p>
-              )}
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              {/* Declaration */}
-
-              <div className="rounded-lg border p-4">
-                <p className="text-xs text-muted-foreground">Declaration</p>
-
-                <div className="mt-2 flex items-center gap-2">
-                  {contract?.declarationAccepted ? (
-                    <>
-                      <CheckCircle2 className="size-4 text-green-600" />
-
-                      <span className="text-sm font-medium">Accepted</span>
-                    </>
-                  ) : (
-                    <>
-                      <XCircle className="size-4 text-destructive" />
-
-                      <span className="text-sm font-medium">Not accepted</span>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Contract Status */}
-
-              <div className="rounded-lg border p-4">
-                <p className="text-xs text-muted-foreground">Contract Status</p>
-
-                <div className="mt-2 flex items-center gap-2">
-                  {contract?.accepted ? (
-                    <>
-                      <CheckCircle2 className="size-4 text-green-600" />
-
-                      <span className="text-sm font-medium">Active</span>
-                    </>
-                  ) : (
-                    <>
-                      <Clock3 className="size-4 text-primary" />
-
-                      <span className="text-sm font-medium">Pending</span>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="grid gap-2 pb-8 text-xs text-muted-foreground sm:grid-cols-2">
-          <div>
-            Restaurant ID: <span className="font-mono">{restaurant._id}</span>
-          </div>
-
-          <div className="text-left sm:text-right">
-            Last updated: {formatDate(restaurant.updatedAt)}
-          </div>
-        </div>
       </div>
     </main>
   );

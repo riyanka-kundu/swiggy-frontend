@@ -118,7 +118,7 @@ export interface Order {
   restaurant: RestaurantListItem | string;
   items: OrderItem[];
   totalAmount: number;
-  status: "pending" | "confirmed" | "preparing" | "out_for_delivery" | "delivered" | "cancelled";
+  status: "placed" | "accepted" | "preparing" | "out_for_delivery" | "delivered" | "cancelled";
   address: string;
   paymentMethod: string;
   isPaid: boolean;

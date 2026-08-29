@@ -122,7 +122,7 @@ export const useRemoveFromCart = () => {
 };
 
 // ============ Orders ============
-export const useMyOrders = () => {
+export const useMyOrders = (enabled = true) => {
   return useQuery<Order[]>({
     queryKey: [QUERY_KEY.My_Orders],
     queryFn: async () => {
@@ -131,6 +131,7 @@ export const useMyOrders = () => {
       );
       return res.data.data;
     },
+    enabled,
   });
 };
 
