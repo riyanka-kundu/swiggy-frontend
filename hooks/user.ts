@@ -6,12 +6,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 // ============ Food List ============
-export const useUserFoodList = (enabled = true) => {
+export const useUserFoodList = (search = "", enabled = true) => {
   return useQuery<Food[]>({
-    queryKey: [QUERY_KEY.Food_List],
+    queryKey: [QUERY_KEY.Food_List, search],
     queryFn: async () => {
       const res = await axiosInstance.get<{ data: Food[] }>(
         EndPoints.user.FOOD_LIST,
+        { params: search.trim() ? { search } : undefined },
       );
       return res.data.data;
     },

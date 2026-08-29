@@ -1,8 +1,22 @@
+"use client";
+
+import { RootState } from "@/redux/store/store";
+import { useSelector } from "react-redux";
+
 type CTASectionProps = {
   onRegister?: () => void;
 };
 
 export default function CTASection({ onRegister }: CTASectionProps) {
+  const { data: authData } = useSelector((state: RootState) => state.auth);
+  const isLoggedInUser = authData?.data?.role === "user";
+
+  const handleBrowse = () => {
+    document
+      .getElementById("food-items")
+      ?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section
       className="
@@ -50,11 +64,13 @@ export default function CTASection({ onRegister }: CTASectionProps) {
         <h2 className="text-3xl font-black md:text-4xl">Hungry now?</h2>
 
         <p className="mt-3 text-white/80">
-          Create an account and start ordering your favourite food today.
+          {isLoggedInUser
+            ? "Browse the freshest food from top kitchens and order to your door."
+            : "Create an account and start ordering your favourite food today."}
         </p>
 
         <button
-          onClick={onRegister}
+          onClick={isLoggedInUser ? handleBrowse : onRegister}
           className="
             mt-7
             rounded-md
@@ -67,7 +83,7 @@ export default function CTASection({ onRegister }: CTASectionProps) {
             hover:bg-white/90
           "
         >
-          Create account
+          {isLoggedInUser ? "Browse food" : "Create account"}
         </button>
       </div>
     </section>
