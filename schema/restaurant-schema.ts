@@ -119,6 +119,8 @@ export const menuSchema = z.object({
 
   category: z.string().min(1, "Category is required"),
 
+  cuisine: z.string().optional(),
+
   image: z.any().nullable().optional(),
 
   basePrice: z.coerce.number().positive("Base price must be greater than 0"),

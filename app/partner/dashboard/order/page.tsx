@@ -157,7 +157,7 @@ export default function RestaurantOrdersPage() {
                 : "Customer";
 
             return (
-              <Card key={order._id} className="overflow-hidden">
+              <Card key={order._id} className="overflow-hidden [--card-spacing:--spacing(4)]">
                 <CardHeader className="border-b bg-muted/20 pb-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
@@ -187,9 +187,9 @@ export default function RestaurantOrdersPage() {
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-4 pt-4">
+                <CardContent className="space-y-3 pt-1">
                   {/* Customer Info & Address */}
-                  <div className="flex flex-wrap items-start gap-x-6 gap-y-2 rounded-xl border bg-muted/20 p-3 text-sm">
+                  <div className="flex flex-col gap-3 rounded-xl border bg-muted/20 p-3 text-sm">
                     <div className="flex min-w-0 flex-col gap-0.5">
                       <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         Customer

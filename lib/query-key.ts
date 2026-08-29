@@ -7,6 +7,7 @@ export const QUERY_KEY = {
   My_Orders: "myOrders",
   Order_Details: "orderDetails",
   Menu_List: "menuList",
+  Food_Detail: "foodDetail",
   Restaurant_Orders: "restaurantOrders",
   Pending_Food_Count: "pendingFoodCount",
 };

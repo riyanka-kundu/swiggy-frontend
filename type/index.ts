@@ -58,14 +58,23 @@ export interface Slot {
 export interface Food {
   _id: string;
   itemName: string;
+  slug?: string;
   basePrice: number;
   discountPrice: number;
+  discountPercentage?: number;
+  gst?: number;
+  preparationTime?: number;
+  description?: string;
   image?: string;
   foodType: string;
   isVeg: boolean;
   category: string;
   cuisine: string;
   isAvailable: boolean;
+  isRecommended?: boolean;
+  rating?: number;
+  totalRatings?: number;
+  totalOrders?: number;
   isDeleted: boolean;
   approvalStatus: "pending" | "approved" | "rejected";
   restaurant: RestaurantListItem;

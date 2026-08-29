@@ -118,6 +118,27 @@ export default function BasicDetails({ form }: Props) {
             )}
           />
 
+          {/* Cuisine */}
+          <Controller
+            name="cuisine"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor="menu-cuisine">Cuisine</FieldLabel>
+                <Input
+                  {...field}
+                  id="menu-cuisine"
+                  aria-invalid={fieldState.invalid}
+                  placeholder="Indian, Chinese"
+                  autoComplete="off"
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+
           {/* Description */}
           <Controller
             name="description"

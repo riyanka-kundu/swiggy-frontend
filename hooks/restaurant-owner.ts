@@ -46,6 +46,39 @@ export const useMenuList = () => {
   });
 };
 
+export const useFoodDetail = (id: string | undefined) => {
+  return useQuery<Food | null>({
+    queryKey: [QUERY_KEY.Food_Detail, id],
+    enabled: Boolean(id),
+    queryFn: async () => {
+      if (!id) return null;
+      const res = await axiosInstance.get<{ success: boolean; data: Food }>(
+        EndPoints.menu.FOOD_DETAILS(id),
+      );
+      return res.data.data;
+    },
+  });
+};
+
+export const useUpdateFood = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, formData }: { id: string; formData: FormData }) =>
+      axiosInstance.post(EndPoints.menu.FOOD_EDIT(id), formData),
+    onSuccess: () => {
+      toast.success("Food item updated");
+      qc.invalidateQueries({ queryKey: [QUERY_KEY.Menu_List] });
+      qc.invalidateQueries({ queryKey: [QUERY_KEY.Food_Detail] });
+    },
+    onError: (err: unknown) => {
+      const error = err as { response?: { data?: { message: string } } };
+      toast.error(
+        error?.response?.data?.message || "Failed to update food item",
+      );
+    },
+  });
+};
+
 export const useToggleAvailability = () => {
   const qc = useQueryClient();
   return useMutation({

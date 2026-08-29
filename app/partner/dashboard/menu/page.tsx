@@ -1,6 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -30,12 +29,8 @@ function FoodCard({ food }: { food: Food }) {
   const { mutate: deleteFood, isPending: deleting } = useDeleteFood();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const isApproved = food.approvalStatus === "approved";
-  const isPending = food.approvalStatus === "pending";
-  const isRejected = food.approvalStatus === "rejected";
-
   return (
-    <Card className="overflow-hidden transition-shadow hover:shadow-md">
+    <Card className="overflow-hidden pt-0 transition-shadow hover:shadow-md">
       {/* Image */}
       <div className="relative h-40 w-full sm:h-44">
         {food.image ? (
@@ -57,7 +52,7 @@ function FoodCard({ food }: { food: Food }) {
             <Button
               variant="secondary"
               size="icon-sm"
-              className="h-8 w-8 bg-white/90 text-foreground shadow-md backdrop-blur hover:bg-white"
+              className="h-8 w-8 bg-background/90 text-foreground shadow-md backdrop-blur hover:bg-background"
               aria-label="Edit item"
             >
               <Pencil className="h-3.5 w-3.5" />
@@ -84,7 +79,7 @@ function FoodCard({ food }: { food: Food }) {
               <Button
                 variant="secondary"
                 size="icon-sm"
-                className="h-8 w-8 bg-white/90 text-foreground shadow-md backdrop-blur hover:bg-white"
+                className="h-8 w-8 bg-background/90 text-foreground shadow-md backdrop-blur hover:bg-background"
                 onClick={() => setConfirmDelete(false)}
                 aria-label="Cancel delete"
               >
@@ -95,7 +90,7 @@ function FoodCard({ food }: { food: Food }) {
             <Button
               variant="secondary"
               size="icon-sm"
-              className="h-8 w-8 bg-white/90 text-destructive shadow-md backdrop-blur hover:bg-white"
+              className="h-8 w-8 bg-background/90 text-destructive shadow-md backdrop-blur hover:bg-background"
               onClick={() => setConfirmDelete(true)}
               aria-label="Delete item"
             >
@@ -112,23 +107,11 @@ function FoodCard({ food }: { food: Food }) {
 
       {/* Bottom info */}
       <div className="space-y-2 p-4">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <h3 className="truncate font-semibold">{food.itemName}</h3>
-            <p className="truncate text-xs text-muted-foreground capitalize">
-              {food.category} · {food.cuisine} · {food.foodType}
-            </p>
-          </div>
-          {/* Approval status badge */}
-          <Badge
-            variant={isApproved ? "default" : isRejected ? "destructive" : "secondary"}
-            className={`shrink-0 text-xs ${isApproved ? "bg-green-600 hover:bg-green-600" : ""}`}
-          >
-            {isApproved && <CheckCircle2 className="mr-1 h-3 w-3" />}
-            {isPending && <Loader2 className="mr-1 h-3 w-3 animate-spin" />}
-            {isRejected && <XCircle className="mr-1 h-3 w-3" />}
-            {food.approvalStatus}
-          </Badge>
+        <div className="min-w-0">
+          <h3 className="truncate font-semibold">{food.itemName}</h3>
+          <p className="truncate text-xs text-muted-foreground capitalize">
+            {food.foodType}
+          </p>
         </div>
 
         {/* Prices */}
@@ -147,7 +130,7 @@ function FoodCard({ food }: { food: Food }) {
         <div className="flex flex-wrap items-center gap-2 pt-0.5">
           <button
             onClick={() => toggle(food._id)}
-            disabled={toggling || !isApproved}
+              disabled={toggling}
             className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${food.isAvailable
               ? "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-950 dark:text-green-400"
               : "bg-muted text-muted-foreground hover:bg-muted/70"
