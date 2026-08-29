@@ -8,11 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -30,13 +26,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Food } from "@/type";
 
-const CATEGORIES = [
-  "Starter",
-  "Main Course",
-  "Dessert",
-  "Beverage",
-  "Snack",
-];
+const CATEGORIES = ["Starter", "Main Course", "Dessert", "Beverage", "Snack"];
 
 const EditFoodPage = () => {
   const params = useParams();
@@ -99,7 +89,12 @@ const EditFoodPage = () => {
         </div>
       </div>
 
-      <EditFoodForm key={food._id} food={food} onSave={onSave} isPending={isPending} />
+      <EditFoodForm
+        key={food._id}
+        food={food}
+        onSave={onSave}
+        isPending={isPending}
+      />
     </div>
   );
 };
@@ -155,10 +150,7 @@ const EditFoodForm = ({ food, onSave, isPending }: EditFoodFormProps) => {
       formData.append("discountPrice", String(Number(discountPrice) || 0));
     }
     formData.append("gst", String(Number(gst) || 0));
-    formData.append(
-      "preparationTime",
-      String(Number(preparationTime) || 0),
-    );
+    formData.append("preparationTime", String(Number(preparationTime) || 0));
     if (imageFile) {
       formData.append("image", imageFile);
     }
@@ -352,7 +344,7 @@ const EditFoodForm = ({ food, onSave, isPending }: EditFoodFormProps) => {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:text-sm file:text-primary-foreground"
+                className="text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:text-primary-foreground"
               />
               {imagePreview && (
                 <div className="mt-4 flex max-w-sm p-2 shadow-sm">

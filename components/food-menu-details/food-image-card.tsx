@@ -62,7 +62,7 @@ export default function ImageUpload({ form }: Props) {
                         setPreview(null);
                       }
                     }}
-                    className="text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:text-sm file:text-primary-foreground"
+                    className="text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:text-primary-foreground"
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
