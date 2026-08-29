@@ -19,7 +19,10 @@ import {
   XCircle,
 } from "lucide-react";
 
-import { useToggleRestaurantStatus, useMyRestaurant } from "@/hooks/restaurant-owner";
+import {
+  useToggleRestaurantStatus,
+  useMyRestaurant,
+} from "@/hooks/restaurant-owner";
 
 import { InfoItem } from "@/components/restaurant-owner/info-item";
 import { SectionHeader } from "@/components/restaurant-owner/section-header";
@@ -33,16 +36,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import {
-  DAYS,
-  formatDay,
-  formatTime,
-  maskAccountNumber,
-} from "@/lib/utils";
+import { DAYS, formatDay, formatTime, maskAccountNumber } from "@/lib/utils";
 import Link from "next/link";
 
 const MyRestaurant = () => {
-
   const { data: restaurant, isLoading, error } = useMyRestaurant();
   const { mutate: toggleStatus, isPending: toggling } =
     useToggleRestaurantStatus();
@@ -154,10 +151,7 @@ const MyRestaurant = () => {
 
   const onboardingProgress = isFullyOnboarded
     ? 100
-    : Math.min(
-      Math.max(((restaurant.onboardingStep ?? 0) / 4) * 100, 0),
-      100,
-    );
+    : Math.min(Math.max(((restaurant.onboardingStep ?? 0) / 4) * 100, 0), 100);
 
   const getStepRoute = (step?: number) => {
     switch (step) {
@@ -362,9 +356,7 @@ const MyRestaurant = () => {
           </Card>
         </div>
 
-
-
-        <Card>
+        <Card className="[--card-spacing:--spacing(4)] md:[--card-spacing:--spacing(6)]">
           <CardHeader className="border-b bg-muted/30">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <SectionHeader
@@ -389,15 +381,17 @@ const MyRestaurant = () => {
                 return (
                   <div
                     key={day}
-                    className={`flex min-h-16 items-center justify-between gap-4 px-4 py-4 sm:px-6 ${index !== DAYS.length - 1 ? "border-b" : ""
-                      }`}
+                    className={`flex min-h-14 items-center justify-between gap-3 px-4 py-3 sm:px-6 ${
+                      index !== DAYS.length - 1 ? "border-b" : ""
+                    }`}
                   >
                     {/* Day */}
 
                     <div className="flex items-center gap-3">
                       <span
-                        className={`size-2.5 shrink-0 rounded-full ${isOpen ? "bg-green-500" : "bg-muted-foreground/30"
-                          }`}
+                        className={`size-2.5 shrink-0 rounded-full ${
+                          isOpen ? "bg-green-500" : "bg-muted-foreground/30"
+                        }`}
                       />
 
                       <span className="text-sm font-medium sm:text-base">
@@ -460,11 +454,7 @@ const MyRestaurant = () => {
               value={restaurant.fssaiNumber}
             />
 
-            <InfoItem
-              icon={FileText}
-              label="GSTIN"
-              value={restaurant.gstin}
-            />
+            <InfoItem icon={FileText} label="GSTIN" value={restaurant.gstin} />
 
             <InfoItem
               icon={FileText}

@@ -62,8 +62,8 @@ function RestaurantCard({ restaurant }: { restaurant: RestaurantListItem }) {
               </Badge>
             )}
             {slot && (
-              <Badge variant="outline" className="text-[10px] font-normal">
-                <Clock className="mr-1 h-2.5 w-2.5" />
+              <Badge variant="outline" className="text-[10px] font-normal whitespace-nowrap">
+                <Clock className="mr-1 h-2.5 w-2.5 shrink-0" />
                 {formatTime(slot.open)} - {formatTime(slot.close)}
               </Badge>
             )}

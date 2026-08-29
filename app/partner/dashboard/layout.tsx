@@ -1,5 +1,8 @@
 "use client";
 
+import { Menu } from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Dialog,
   DialogContent,
@@ -12,9 +15,9 @@ import { AppDispatch, RootState } from "@/redux/store/store";
 
 import {
   ChefHat,
-  ClipboardList,
   LayoutDashboard,
   LogOut,
+  Settings,
   ShoppingBag,
   UtensilsCrossed,
 } from "lucide-react";
@@ -31,11 +34,17 @@ const navItems = [
   {
     href: "/partner/dashboard/settings",
     label: "Settings",
-    icon: ClipboardList,
+    icon: Settings,
   },
 ];
 
-function DashboardSidebar() {
+function SidebarContent({
+  onNavigate,
+  showTheme = false,
+}: {
+  onNavigate?: () => void;
+  showTheme?: boolean;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -56,9 +65,8 @@ function DashboardSidebar() {
 
   return (
     <>
-      <aside className="flex w-64 shrink-0 flex-col border-r bg-card">
-        {/* Logo */}
-        <div className="flex items-center gap-2.5 border-b px-6 py-5">
+      <div className="flex flex-col border-b md:border-b-0">
+        <div className="flex items-center gap-2.5 px-6 py-5">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <UtensilsCrossed className="h-4.5 w-4.5" />
           </div>
@@ -67,54 +75,64 @@ function DashboardSidebar() {
             <p className="text-xs text-muted-foreground">Partner Portal</p>
           </div>
         </div>
+      </div>
 
-        {/* Nav */}
-        <nav className="flex-1 space-y-1 p-4">
-          {navItems.map(({ href, label, icon: Icon }) => {
-            const isActive =
-              pathname === href ||
-              (href !== "/partner/dashboard" && pathname.startsWith(href));
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
-                }`}
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                {label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* User footer */}
-        <div className="border-t p-4">
-          {mounted && (
-            <div className="mb-3 flex items-center gap-3 rounded-lg bg-muted/50 px-3 py-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
-                {data?.data?.name?.charAt(0)?.toUpperCase() ?? "R"}
-              </div>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-medium">{data?.data?.name || "Restaurant Owner"}</p>
-                <p className="truncate text-xs text-muted-foreground">
-                  Restaurant Owner
-                </p>
-              </div>
-            </div>
-          )}
-          <button
-            onClick={() => setShowLogoutDialog(true)}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive cursor-pointer"
-          >
-            <LogOut className="h-4 w-4" />
-            Sign out
-          </button>
+      {showTheme && (
+        <div className="flex items-center justify-between gap-2 rounded-lg bg-muted/50 px-3 py-2.5 mx-4 mt-4">
+          <span className="text-sm text-muted-foreground">Theme</span>
+          <ModeToggle />
         </div>
-      </aside>
+      )}
+
+      {/* Nav */}
+      <nav className="flex-1 space-y-1 p-4">
+        {navItems.map(({ href, label, icon: Icon }) => {
+          const isActive =
+            pathname === href ||
+            (href !== "/partner/dashboard" && pathname.startsWith(href));
+          return (
+            <Link
+              key={href}
+              href={href}
+              onClick={onNavigate}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                isActive
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
+              }`}
+            >
+              <Icon className="h-4 w-4 shrink-0" />
+              {label}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* User footer */}
+      <div className="border-t p-4">
+        {mounted && (
+          <div className="mb-3 flex items-center gap-3 rounded-lg bg-muted/50 px-3 py-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+              {data?.data?.name?.charAt(0)?.toUpperCase() ?? "R"}
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium">
+                {data?.data?.name || "Restaurant Owner"}
+              </p>
+              <p className="truncate text-xs text-muted-foreground">
+                Restaurant Owner
+              </p>
+            </div>
+          </div>
+        )}
+        <button
+          onClick={() => setShowLogoutDialog(true)}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive cursor-pointer"
+        >
+          <LogOut className="h-4 w-4" />
+          Sign out
+        </button>
+      </div>
 
       {/* Logout confirmation dialog */}
       <Dialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
@@ -160,13 +178,52 @@ function DashboardSidebar() {
 }
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const closeDrawer = () => setMobileOpen(false);
+
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      <DashboardSidebar />
-      <main className="flex-1 overflow-y-auto">{children}</main>
+    <div className="flex h-screen flex-col overflow-hidden bg-background">
+      {/* Mobile top bar */}
+      <header className="flex h-14 shrink-0 items-center justify-between border-b bg-card px-4 md:hidden">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <UtensilsCrossed className="h-4 w-4" />
+          </div>
+          <div>
+            <p className="text-sm font-bold leading-tight">FoodExpress</p>
+            <p className="text-[10px] text-muted-foreground">Partner Portal</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <button
+                aria-label="Open menu"
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-accent"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-72 p-0">
+              <SidebarContent onNavigate={closeDrawer} showTheme />
+            </SheetContent>
+          </Sheet>
+        </div>
+      </header>
+
+      <div className="flex min-h-0 flex-1">
+        {/* Desktop sidebar */}
+        <aside className="hidden w-64 shrink-0 flex-col border-r bg-card md:flex">
+          <SidebarContent showTheme />
+        </aside>
+
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto">{children}</main>
+      </div>
     </div>
   );
 };
 
 export default DashboardLayout;
-
