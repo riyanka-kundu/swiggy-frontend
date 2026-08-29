@@ -25,6 +25,7 @@ function CartContent() {
   const { mutate: addToCart, isPending: adding } = useAddToCart();
   const { mutate: placeOrder, isPending: ordering } = usePlaceOrder();
   const [address, setAddress] = useState("");
+  const [addressError, setAddressError] = useState("");
 
   if (isLoading) {
     return (
@@ -61,9 +62,10 @@ function CartContent() {
 
   const handleCheckout = () => {
     if (!address.trim()) {
-      alert("Please enter your delivery address");
+      setAddressError("Please enter your delivery address");
       return;
     }
+    setAddressError("");
     placeOrder({ address, paymentMethod: "cash_on_delivery" });
   };
 
@@ -208,11 +210,17 @@ function CartContent() {
                 <label className="text-sm font-medium">Delivery Address</label>
                 <textarea
                   value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  onChange={(e) => {
+                    setAddress(e.target.value);
+                    if (addressError) setAddressError("");
+                  }}
                   placeholder="Enter your delivery address…"
                   rows={3}
                   className="w-full resize-none rounded-lg border bg-background px-3 py-2 text-sm outline-none ring-offset-background focus:ring-2 focus:ring-ring"
                 />
+                {addressError && (
+                  <p className="text-sm text-red-500">{addressError}</p>
+                )}
               </div>
 
               <Button
