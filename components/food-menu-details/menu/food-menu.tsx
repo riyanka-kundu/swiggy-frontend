@@ -1,20 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import AddOns from "@/components/onboarding/step3/addon-card";
-import BasicDetails from "@/components/onboarding/step3/basic-food-info-card";
-import ImageUpload from "@/components/onboarding/step3/food-image-card";
-import Price from "@/components/onboarding/step3/pricing-card";
-import VariantsCard from "@/components/onboarding/step3/variants-card";
+import AddOns from "@/components/food-menu-details/addon-card";
+import BasicDetails from "@/components/food-menu-details/basic-food-info-card";
+import ImageUpload from "@/components/food-menu-details/food-image-card";
+import Price from "@/components/food-menu-details/pricing-card";
+import VariantsCard from "@/components/food-menu-details/variants-card";
 import { Button } from "@/components/ui/button";
 import { restaurantMenu } from "@/redux/slice/restaurant-slice";
 import { AppDispatch } from "@/redux/store/store";
 import { menuSchema, TMenu, TMenuInput } from "@/schema/restaurant-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle } from "lucide-react";
+import { useState } from "react";
 import { FieldErrors, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-
 
 type Props = {
   onNext?: () => void;
@@ -108,7 +107,6 @@ export default function Menu({ onNext }: Props) {
     }
   }
 
-
   const getErrorMessages = (errs: FieldErrors<TMenuInput>): string[] => {
     const messages: string[] = [];
     const extract = (obj: Record<string, unknown>) => {
@@ -164,5 +162,3 @@ export default function Menu({ onNext }: Props) {
     </form>
   );
 }
-
-

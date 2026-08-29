@@ -16,7 +16,7 @@ export default function SignInPage() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-secondary/20 to-background px-4">
+    <main className="flex min-h-screen items-center justify-center bg-linear-to-br from-background via-secondary/20 to-background px-4">
       {/* Decorative blobs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-40 -top-40 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
@@ -29,4 +29,3 @@ export default function SignInPage() {
     </main>
   );
 }
-

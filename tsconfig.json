@@ -28,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
-, "components/onboarding/step3/basic-food-info-card.tsx"  ],
+    "**/*.mts",
+    "components/food-menu-details/basic-food-info-card.tsx"
+  ],
   "exclude": ["node_modules"]
 }

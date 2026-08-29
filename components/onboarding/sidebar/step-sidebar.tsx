@@ -19,11 +19,6 @@ const steps = [
   },
   {
     step: 3,
-    title: "Menu Setup",
-    href: "/partner/onboarding/add-food",
-  },
-  {
-    step: 4,
     title: "Partner Agreement",
     href: "/partner/onboarding/contract",
   },
@@ -33,11 +28,8 @@ export default function StepSidebar() {
   const pathname = usePathname();
   const { data: restaurant } = useMyRestaurant();
 
-  // Backend onboardingStep tells us how far the user has progressed.
-  // Steps completed = onboardingStep (e.g. onboardingStep=3 means steps 1,2,3 are done).
-  // If contract is accepted, all 4 steps are done.
   const backendStep = useMemo(() => {
-    if (restaurant?.contract?.accepted) return 5; // all done
+    if (restaurant?.contract?.accepted) return 5;
     return (restaurant?.onboardingStep ?? 0) + 1;
   }, [restaurant]);
 
@@ -46,11 +38,10 @@ export default function StepSidebar() {
     return activeStep?.step ?? 1;
   }, [pathname]);
 
-  // Use the higher of URL-derived step and backend step for completion tracking
   const effectiveStep = Math.max(currentStep, backendStep);
 
   return (
-    <aside className="sticky top-20 h-fit w-full rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+    <aside className="fixed left-0 top-20 flex h-[calc(100vh-5rem)] w-[300px] flex-col overflow-y-auto rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
       {/* Brand header */}
       <div className="mb-6 flex items-center gap-2 border-b border-gray-100 pb-5">
         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-500 text-white">
@@ -66,7 +57,7 @@ export default function StepSidebar() {
         </div>
       </div>
 
-      <div>
+      <div className="flex flex-1 flex-col">
         {steps.map((step, idx) => (
           <StepItem
             key={step.step}

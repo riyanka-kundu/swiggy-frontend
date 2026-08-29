@@ -6,10 +6,12 @@ export default function OnboardingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto grid w-full grid-cols-1 gap-6 px-4 py-10 md:grid-cols-[280px_1fr]">
-      <StepSidebar />
+    <div className="mx-auto flex w-full gap-6 px-4 py-10">
+      <div className="hidden w-70 shrink-0 md:block">
+        <StepSidebar />
+      </div>
 
-      <main>{children}</main>
+      <main className="min-w-0 flex-1">{children}</main>
     </div>
   );
 }

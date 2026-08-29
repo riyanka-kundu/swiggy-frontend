@@ -1,7 +1,6 @@
 "use client";
 
 import { ModeToggle } from "@/components/mode-toggle";
-import SignInSheet from "@/components/auth/signin-sheet";
 import {
   Dialog,
   DialogContent,
@@ -34,7 +33,6 @@ export default function HomeNavbar() {
   const [mounted, setMounted] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
-  const [showSignIn, setShowSignIn] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const role = data?.data?.role;
   const isCustomer = Boolean(mounted && data?.data && role === "user");
@@ -157,7 +155,7 @@ export default function HomeNavbar() {
             </>
           ) : (
             <button
-              onClick={() => setShowSignIn(true)}
+              onClick={() => router.push("/signin")}
               className="rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 cursor-pointer"
             >
               Sign in
@@ -165,9 +163,6 @@ export default function HomeNavbar() {
           )}
         </div>
       </nav>
-
-      {/* Sign in sidebar */}
-      <SignInSheet open={showSignIn} onOpenChange={setShowSignIn} />
 
       {/* Sign out confirmation dialog */}
       <Dialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>

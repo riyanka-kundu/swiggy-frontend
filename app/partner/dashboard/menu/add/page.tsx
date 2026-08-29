@@ -1,6 +1,6 @@
 "use client";
 
-import Menu from "@/components/onboarding/step3/menu/food-menu";
+import Menu from "@/components/food-menu-details/menu/food-menu";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 

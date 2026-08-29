@@ -80,29 +80,23 @@ export const restaurantDocuments = createAsyncThunk(
 
 export const restaurantMenu = createAsyncThunk(
   "restaurant/restaurantMenu",
-
   async (payload: TMenu | FormData, { rejectWithValue }) => {
     try {
-      const headers =
-        payload instanceof FormData
-          ? { "Content-Type": "multipart/form-data" }
-          : undefined;
-
-      const res = await axiosInstance.post(
+      const response = await axiosInstance.post(
         EndPoints.onboard.ADD_FOOD,
         payload,
-        { headers },
       );
 
-      return res.data;
+      return response.data;
     } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
+      const err = error as AxiosError<{
+        message?: string;
+      }>;
 
       return rejectWithValue(err.response?.data?.message || "Menu add failed");
     }
   },
 );
-
 
 export const restaurantContract = createAsyncThunk(
   "restaurant/restaurantContract",

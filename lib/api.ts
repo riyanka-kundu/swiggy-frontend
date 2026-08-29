@@ -1,7 +1,9 @@
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/lib/constant";
+import { ACCESS_TOKEN, REFRESH_TOKEN, USER_ROLE } from "@/lib/constant";
+
 import { EndPoints } from "@/lib/endpoints";
-import axios from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { Cookies } from "react-cookie";
+
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   withCredentials: true,
@@ -10,87 +12,116 @@ export const axiosInstance = axios.create({
 const cookies = new Cookies();
 
 axiosInstance.interceptors.request.use(
-  function (config) {
-    const token = cookies.get(ACCESS_TOKEN);
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  (config: InternalAxiosRequestConfig) => {
+    const accessToken = cookies.get(ACCESS_TOKEN);
+
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
+
+    // IMPORTANT:
+    // Do NOT manually set Content-Type for FormData.
+    // Browser/Axios will set multipart/form-data + boundary automatically.
+
     return config;
   },
-  function (error) {
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
+
+    if (!originalRequest) {
+      return Promise.reject(error);
+    }
 
     const isAuthRoute = [EndPoints.auth.LOG_IN, EndPoints.auth.REFRESH].some(
       (route) => originalRequest.url?.includes(route),
     );
 
+    // Only refresh on 401.
+    // 403 means authenticated but not authorized.
     if (
-      error?.response?.status === 401 &&
-      !originalRequest._retry &&
-      !isAuthRoute
+      error.response?.status !== 401 ||
+      originalRequest._retry ||
+      isAuthRoute
     ) {
-      originalRequest._retry = true;
-      const refresh = cookies.get(REFRESH_TOKEN);
+      return Promise.reject(error);
+    }
 
-      if (!refresh) {
-        return Promise.reject(error);
+    originalRequest._retry = true;
+
+    const refreshToken = cookies.get(REFRESH_TOKEN);
+
+    if (!refreshToken) {
+      return Promise.reject(error);
+    }
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}${EndPoints.auth.REFRESH}`,
+        {
+          refreshToken,
+        },
+        {
+          withCredentials: true,
+        },
+      );
+
+      const {
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+        role,
+      } = response.data;
+
+      if (!newAccessToken) {
+        throw new Error("No access token returned from refresh");
       }
 
-      try {
-        const { data, status } = await axios.post(
-          `${process.env.NEXT_PUBLIC_BASE_URL}${EndPoints.auth.REFRESH}`,
-          { refreshToken: refresh },
-          { withCredentials: true },
-        );
-        if (status !== 200) {
-          throw new Error(data);
-        }
-        const newAccessToken = data.accessToken;
-        const newRefreshToken = data.refreshToken;
+      cookies.set(ACCESS_TOKEN, newAccessToken, {
+        path: "/",
+        maxAge: 60 * 60 * 24,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
 
-        cookies.set(ACCESS_TOKEN, newAccessToken, {
-          path: "/",
-          maxAge: 60 * 60 * 24,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
-        });
+      if (newRefreshToken) {
         cookies.set(REFRESH_TOKEN, newRefreshToken, {
           path: "/",
           maxAge: 60 * 60 * 24,
           secure: process.env.NODE_ENV === "production",
           sameSite: "strict",
         });
-
-        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        console.log(refreshError);
-        cookies.remove(ACCESS_TOKEN, { path: "/" });
-        cookies.remove(REFRESH_TOKEN, { path: "/" });
-
-        const publicRoutes = ["/", "/signin", "/signup", "/partner"];
-        const isPublicPage =
-          typeof window !== "undefined" &&
-          publicRoutes.some(
-            (route) =>
-              window.location.pathname === route ||
-              (route !== "/" && window.location.pathname.startsWith(route)),
-          );
-
-        if (!isPublicPage && typeof window !== "undefined") {
-          window.location.href = "/signin";
-        }
-
-        return Promise.reject(refreshError);
       }
+
+      // Keep role cookie synchronized if backend returns role.
+      if (role) {
+        cookies.set(USER_ROLE, role, {
+          path: "/",
+          maxAge: 60 * 60 * 24,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+        });
+      }
+
+      originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+      return axiosInstance(originalRequest);
+    } catch (refreshError) {
+      cookies.remove(ACCESS_TOKEN, { path: "/" });
+      cookies.remove(REFRESH_TOKEN, { path: "/" });
+      cookies.remove(USER_ROLE, { path: "/" });
+
+      if (typeof window !== "undefined") {
+        window.location.href = "/signin";
+      }
+
+      return Promise.reject(refreshError);
     }
-    return Promise.reject(error);
   },
 );

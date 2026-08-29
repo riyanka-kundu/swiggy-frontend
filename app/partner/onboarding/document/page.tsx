@@ -7,6 +7,6 @@ export default function DocumentPage() {
   const router = useRouter();
 
   return (
-    <DocumentsForm onNext={() => router.push("/partner/onboarding/add-food")} />
+    <DocumentsForm onNext={() => router.push("/partner/onboarding/contract")} />
   );
 }

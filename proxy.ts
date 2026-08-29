@@ -9,7 +9,11 @@ export function proxy(request: NextRequest) {
     request.cookies.get(REFRESH_TOKEN)?.value ||
     request.cookies.get("partnerToken")?.value;
 
-  const role = request.cookies.get(USER_ROLE)?.value;
+  // const role = request.cookies.get(USER_ROLE)?.value;
+  const partnerToken = request.cookies.get("partnerToken")?.value;
+  const role =
+    request.cookies.get(USER_ROLE)?.value ||
+    (partnerToken ? "restaurant_owner" : undefined);
   const isLoggedIn = Boolean(token);
 
   const isAuthPage = pathname === "/signin" || pathname === "/signup";
@@ -18,7 +22,8 @@ export function proxy(request: NextRequest) {
 
   // 1. Auth pages (/signin, /signup) -> redirect logged in users away
   if (isLoggedIn && isAuthPage) {
-    const destination = role === "restaurant_owner" ? "/partner/dashboard" : "/";
+    const destination =
+      role === "restaurant_owner" ? "/partner/dashboard" : "/";
     return NextResponse.redirect(new URL(destination, request.url));
   }
 
@@ -47,4 +52,3 @@ export const config = {
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|webmanifest)$).*)",
   ],
 };
-

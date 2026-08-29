@@ -55,11 +55,11 @@ export default function BuisnessInfoCard({ form }: Props) {
                     <SelectValue placeholder="Select outlet type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="restaurant">Restaurant</SelectItem>
-                    <SelectItem value="cloud-kitchen">Cloud Kitchen</SelectItem>
-                    <SelectItem value="cafe">Cafe</SelectItem>
-                    <SelectItem value="bakery">Bakery</SelectItem>
-                    <SelectItem value="food-truck">Food Truck</SelectItem>
+                    <SelectItem value="Restaurant">Restaurant</SelectItem>
+                    <SelectItem value="Cloud Kitchen">Cloud Kitchen</SelectItem>
+                    <SelectItem value="Cafe">Cafe</SelectItem>
+                    <SelectItem value="Bakery">Bakery</SelectItem>
+                    <SelectItem value="Sweet Shop">Sweet Shop</SelectItem>
                   </SelectContent>
                 </Select>
                 {fieldState.invalid && (

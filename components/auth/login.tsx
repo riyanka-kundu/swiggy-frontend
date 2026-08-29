@@ -43,7 +43,7 @@ export default function Login({ onSuccess }: Props) {
       toast.success(res.message || "Login successful");
       onSuccess(res.data?.role || "user");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Login failed");
+      toast.error(error instanceof Error ? error.message : String(error));
     }
   };
 
@@ -101,7 +101,9 @@ export default function Login({ onSuccess }: Props) {
             </button>
           </div>
           {errors.password && (
-            <p className="text-sm text-destructive">{errors.password.message}</p>
+            <p className="text-sm text-destructive">
+              {errors.password.message}
+            </p>
           )}
         </div>
 
