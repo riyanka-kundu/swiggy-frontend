@@ -68,110 +68,129 @@ export default function HomeNavbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/80 px-6 py-4 backdrop-blur md:px-10">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 text-lg font-black">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <UtensilsCrossed className="h-4.5 w-4.5" />
-          </span>
-          FoodExpress
-        </Link>
-
-        {/* Right side */}
-        <div className="flex items-center gap-3">
-          <Link
-            href="/partner"
-            className="hidden items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground md:flex"
-          >
-            Partner with us
+      <nav className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur">
+        <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 md:px-8">
+          {/* Logo */}
+          <Link href="/" className="group flex shrink-0 items-center gap-2.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm transition-transform group-hover:scale-105">
+              <UtensilsCrossed className="h-4.5 w-4.5" />
+            </span>
+            <span className="text-lg font-black tracking-tight">
+              FoodExpress
+            </span>
           </Link>
 
-          {loading ? (
-            <button
-              disabled
-              className="flex min-w-24 cursor-not-allowed items-center justify-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground opacity-70"
+          {/* Right side */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <Link
+              href="/partner"
+              className="hidden items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground md:flex"
             >
-              <Loader2 className="h-4 w-4 animate-spin" />
-            </button>
-          ) : mounted && data ? (
-            <>
-              {/* Cart icon — only for users */}
-              {role === "user" && (
-                <Link
-                  href="/cart"
-                  className="relative flex h-9 w-9 items-center justify-center rounded-full border bg-background text-foreground transition-colors hover:bg-accent"
-                >
-                  <ShoppingCart className="h-4 w-4" />
-                  {cartCount > 0 && (
-                    <span className="absolute -right-1 -top-1 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                      {cartCount > 9 ? "9+" : cartCount}
-                    </span>
-                  )}
-                </Link>
-              )}
+              Partner with us
+            </Link>
 
-              {/* User dropdown */}
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setDropdownOpen((o) => !o)}
-                  className="flex items-center gap-2 rounded-lg border bg-background px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
-                >
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <span className="max-w-28 truncate">{data.data?.name}</span>
-                  <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
-                </button>
-
-                {dropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-52 rounded-xl border bg-card p-1.5 shadow-lg">
-                    <div className="border-b px-3 pb-2 pt-1">
-                      <p className="text-xs font-medium">{data.data?.name}</p>
-                      <p className="text-xs text-muted-foreground capitalize">{role}</p>
-                    </div>
-                    <div className="mt-1 space-y-0.5">
-                      {role === "restaurant_owner" && (
-                        <Link
-                          href="/partner/dashboard"
-                          onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm hover:bg-accent"
-                        >
-                          <LayoutDashboard className="h-4 w-4" />
-                          Dashboard
-                        </Link>
-                      )}
-                      {role === "user" && (
-                        <Link
-                          href="/my-orders"
-                          onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm hover:bg-accent"
-                        >
-                          <ReceiptText className="h-4 w-4" />
-                          My Orders
-                        </Link>
-                      )}
-                      <button
-                        onClick={() => {
-                          setDropdownOpen(false);
-                          setShowLogoutDialog(true);
-                        }}
-                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-destructive hover:bg-destructive/10 cursor-pointer"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        Sign out
-                      </button>
-                    </div>
-                  </div>
+            {loading ? (
+              <button
+                disabled
+                className="flex h-9 w-24 cursor-not-allowed items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground opacity-70"
+              >
+                <Loader2 className="h-4 w-4 animate-spin" />
+              </button>
+            ) : mounted && data ? (
+              <>
+                {/* Cart icon — only for users */}
+                {role === "user" && (
+                  <Link
+                    href="/cart"
+                    className="relative flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-accent"
+                    aria-label="Cart"
+                  >
+                    <ShoppingCart className="h-4 w-4" />
+                    {cartCount > 0 && (
+                      <span className="absolute -right-1 -top-1 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-primary px-0.5 text-[10px] font-bold text-primary-foreground">
+                        {cartCount > 9 ? "9+" : cartCount}
+                      </span>
+                    )}
+                  </Link>
                 )}
-              </div>
-            </>
-          ) : (
-            <button
-              onClick={() => router.push("/signin")}
-              className="rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 cursor-pointer"
-            >
-              Sign in
-            </button>
-          )}
-          <ModeToggle />
+
+                {/* User dropdown */}
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setDropdownOpen((o) => !o)}
+                    className="flex items-center gap-1.5 rounded-lg border border-border bg-background py-2 pl-2.5 pr-2 text-sm font-medium transition-colors hover:bg-accent"
+                  >
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <User className="h-3.5 w-3.5" />
+                    </span>
+                    <span className="hidden max-w-24 truncate sm:inline">
+                      {data.data?.name}
+                    </span>
+                    <ChevronDown
+                      className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${
+                        dropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {dropdownOpen && (
+                    <div className="absolute right-0 top-full mt-2 w-52 rounded-xl border bg-card p-1.5 shadow-lg">
+                      <div className="border-b px-3 pb-2 pt-1">
+                        <p className="text-xs font-medium">{data.data?.name}</p>
+                        <p className="text-xs text-muted-foreground capitalize">
+                          {role}
+                        </p>
+                      </div>
+                      <div className="mt-1 space-y-0.5">
+                        {role === "restaurant_owner" && (
+                          <Link
+                            href="/partner/dashboard"
+                            onClick={() => setDropdownOpen(false)}
+                            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm hover:bg-accent"
+                          >
+                            <LayoutDashboard className="h-4 w-4" />
+                            Dashboard
+                          </Link>
+                        )}
+                        {role === "user" && (
+                          <Link
+                            href="/my-orders"
+                            onClick={() => setDropdownOpen(false)}
+                            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm hover:bg-accent"
+                          >
+                            <ReceiptText className="h-4 w-4" />
+                            My Orders
+                          </Link>
+                        )}
+                        <button
+                          onClick={() => {
+                            setDropdownOpen(false);
+                            setShowLogoutDialog(true);
+                          }}
+                          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-destructive hover:bg-destructive/10 cursor-pointer"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Sign out
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <button
+                onClick={() => router.push("/signin")}
+                className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 cursor-pointer"
+              >
+                Sign in
+              </button>
+            )}
+
+            {/* Utility divider */}
+            <span className="mx-1 hidden h-5 w-px bg-border sm:block" />
+
+            <ModeToggle />
+          </div>
         </div>
       </nav>
 
