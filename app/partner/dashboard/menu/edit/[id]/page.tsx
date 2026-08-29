@@ -355,7 +355,7 @@ const EditFoodForm = ({ food, onSave, isPending }: EditFoodFormProps) => {
                 className="text-sm file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-2 file:text-sm file:text-primary-foreground"
               />
               {imagePreview && (
-                <div className="mt-4 flex max-w-sm rounded-lg border p-2 shadow-sm">
+                <div className="mt-4 flex max-w-sm p-2 shadow-sm">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={imagePreview}

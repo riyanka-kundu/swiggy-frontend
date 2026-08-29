@@ -69,7 +69,7 @@ export default function ImageUpload({ form }: Props) {
                   )}
 
                   {preview && (
-                    <div className="mt-4 flex max-w-sm rounded-lg border bg-white p-2 shadow-sm">
+                    <div className="mt-4 flex max-w-sm p-2 shadow-sm">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={preview}

@@ -41,17 +41,17 @@ export default function StepSidebar() {
   const effectiveStep = Math.max(currentStep, backendStep);
 
   return (
-    <aside className="fixed left-0 top-20 flex h-[calc(100vh-5rem)] w-[300px] flex-col overflow-y-auto rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+    <aside className="fixed left-0 top-20 flex h-[calc(100vh-5rem)] w-[300px] flex-col overflow-y-auto rounded-2xl border border-border bg-card p-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
       {/* Brand header */}
-      <div className="mb-6 flex items-center gap-2 border-b border-gray-100 pb-5">
+      <div className="mb-6 flex items-center gap-2 border-b border-border/60 pb-5">
         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-500 text-white">
           <UtensilsCrossed className="h-4.5 w-4.5" />
         </span>
         <div>
-          <p className="text-[15px] font-semibold leading-tight text-gray-900">
+          <p className="text-[15px] font-semibold leading-tight text-foreground">
             FoodExpress
           </p>
-          <p className="text-[12px] leading-tight text-gray-400">
+          <p className="text-[12px] leading-tight text-muted-foreground">
             Partner Onboarding
           </p>
         </div>

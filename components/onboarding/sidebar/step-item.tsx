@@ -53,7 +53,7 @@ export default function StepItem({
         >
           <div
             className={cn(
-              "relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border bg-white text-sm font-semibold",
+              "relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border bg-card text-sm font-semibold",
               completed && "border-green-600 bg-green-600 text-white",
               active && "border-primary bg-primary text-primary-foreground",
               pending && "border-muted-foreground/30 text-muted-foreground",
