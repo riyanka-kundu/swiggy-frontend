@@ -55,7 +55,7 @@ export default function BasicDetailsCard({ form }: Props) {
                   id="basic-details-restaurant-name"
                   aria-invalid={fieldState.invalid}
                   placeholder="Spice Garden"
-                  autoComplete="off"
+                  autoComplete="organization"
                   className="h-11 rounded-lg border-border bg-background px-3.5 text-sm shadow-none transition focus-visible:ring-2"
                 />
 
@@ -84,7 +84,7 @@ export default function BasicDetailsCard({ form }: Props) {
                   id="basic-details-owner-name"
                   aria-invalid={fieldState.invalid}
                   placeholder="John Doe"
-                  autoComplete="off"
+                  autoComplete="name"
                   className="h-11 rounded-lg border-border bg-background px-3.5 text-sm shadow-none transition focus-visible:ring-2"
                 />
 
@@ -113,7 +113,7 @@ export default function BasicDetailsCard({ form }: Props) {
                   id="basic-details-location"
                   aria-invalid={fieldState.invalid}
                   placeholder="Kolkata, West Bengal"
-                  autoComplete="off"
+                  autoComplete="street-address"
                   className="h-11 rounded-lg border-border bg-background px-3.5 text-sm shadow-none transition focus-visible:ring-2"
                 />
 
@@ -143,7 +143,7 @@ export default function BasicDetailsCard({ form }: Props) {
                   type="email"
                   aria-invalid={fieldState.invalid}
                   placeholder="owner@spicegarden.com"
-                  autoComplete="off"
+                  autoComplete="email"
                   className="h-11 rounded-lg border-border bg-background px-3.5 text-sm shadow-none transition focus-visible:ring-2"
                 />
 
@@ -171,10 +171,11 @@ export default function BasicDetailsCard({ form }: Props) {
                   {...field}
                   id="basic-details-phone"
                   type="tel"
-                  maxLength={13}
+                  inputMode="numeric"
+                  maxLength={10}
                   aria-invalid={fieldState.invalid}
                   placeholder="9876543210"
-                  autoComplete="off"
+                  autoComplete="tel"
                   className="h-11 rounded-lg border-border bg-background px-3.5 text-sm shadow-none transition focus-visible:ring-2"
                 />
 
@@ -202,10 +203,11 @@ export default function BasicDetailsCard({ form }: Props) {
                   {...field}
                   id="basic-details-whatsapp"
                   type="tel"
-                  maxLength={13}
+                  inputMode="numeric"
+                  maxLength={10}
                   aria-invalid={fieldState.invalid}
                   placeholder="9876543210"
-                  autoComplete="off"
+                  autoComplete="tel"
                   className="h-11 rounded-lg border-border bg-background px-3.5 text-sm shadow-none transition focus-visible:ring-2"
                 />
 

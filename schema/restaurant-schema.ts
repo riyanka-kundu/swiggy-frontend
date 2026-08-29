@@ -25,12 +25,12 @@ export const restaurantSchema = z.object({
   phone: z
     .string()
     .min(1, "Phone number is required")
-    .regex(/^(\+91)?[0-9]{10}$/, "Phone number must be 10 digits"),
+    .regex(/^[0-9]{10}$/, "Phone number must be exactly 10 digits"),
 
   whatsappNumber: z
     .string()
     .min(1, "WhatsApp number is required")
-    .regex(/^(\+91)?[0-9]{10}$/, "WhatsApp number must be 10 digits"),
+    .regex(/^[0-9]{10}$/, "WhatsApp number must be exactly 10 digits"),
 
 
   workingDays: z.array(z.string()).min(1, "Select at least one working day"),

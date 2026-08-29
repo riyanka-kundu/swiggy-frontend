@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { MinusIcon } from "lucide-react";
 
 function InputOTP({
+  onChange,
   className,
   containerClassName,
   ...props
@@ -20,7 +21,10 @@ function InputOTP({
         "cn-input-otp flex items-center has-disabled:opacity-50",
         containerClassName,
       )}
+      inputMode="numeric"
       spellCheck={false}
+      autoComplete="one-time-code"
+      onChange={(value) => onChange?.(value.replace(/[^0-9]/g, ""))}
       className={cn("disabled:cursor-not-allowed", className)}
       {...props}
     />

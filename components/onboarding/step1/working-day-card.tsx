@@ -32,6 +32,9 @@ const days = [
   "Sunday",
 ];
 
+const isSelected = (value: string[] | undefined, day: string) =>
+  (value || []).some((item) => item.toLowerCase() === day.toLowerCase());
+
 export default function WorkingDaysCard({ form }: Props) {
   return (
     <Card className="rounded-2xl border-border/60 bg-background shadow-sm">
@@ -49,54 +52,97 @@ export default function WorkingDaysCard({ form }: Props) {
         <Controller
           name="workingDays"
           control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid} className="space-y-3">
-              <FieldLabel className="text-sm font-medium">
-                Available Days
-              </FieldLabel>
+          render={({ field, fieldState }) => {
+            const selectedCount = days.filter((day) =>
+              isSelected(field.value, day),
+            ).length;
+            const allSelected = selectedCount === days.length;
 
-              <FieldGroup className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                {days.map((day) => {
-                  const checked = field.value?.includes(day);
+            const toggleDay = (day: string, isChecked: boolean) => {
+              const current = field.value || [];
 
-                  return (
+              if (isChecked) {
+                if (!isSelected(current, day)) {
+                  field.onChange([...current, day]);
+                }
+              } else {
+                field.onChange(
+                  current.filter((item) => item.toLowerCase() !== day.toLowerCase()),
+                );
+              }
+            };
+
+            return (
+              <Field data-invalid={fieldState.invalid} className="space-y-3">
+                <FieldLabel className="text-sm font-medium">
+                  Available Days
+                </FieldLabel>
+
+                <FieldGroup className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                     <label
-                      key={day}
                       className={[
                         "flex min-h-12 cursor-pointer items-center gap-3",
                         "rounded-lg border px-4 py-3",
                         "transition-all duration-150",
                         "hover:bg-muted/50",
-                        checked
+                        allSelected
                           ? "border-primary/40 bg-primary/5"
                           : "border-border bg-background",
                       ].join(" ")}
                     >
                       <Checkbox
-                        checked={checked}
+                        checked={allSelected}
                         onCheckedChange={(isChecked) => {
-                          if (isChecked) {
-                            field.onChange([...(field.value || []), day]);
-                          } else {
-                            field.onChange(
-                              field.value?.filter((item) => item !== day),
-                            );
-                          }
+                          field.onChange(isChecked ? [...days] : []);
                         }}
                         className="size-4"
                       />
 
                       <span className="text-sm font-medium text-foreground">
-                        {day}
+                        Everyday
                       </span>
                     </label>
-                  );
-                })}
-              </FieldGroup>
 
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
+                    {days.map((day) => {
+                      const checked = isSelected(field.value, day);
+
+                      return (
+                        <label
+                          key={day}
+                          className={[
+                            "flex min-h-12 cursor-pointer items-center gap-3",
+                            "rounded-lg border px-4 py-3",
+                            "transition-all duration-150",
+                            "hover:bg-muted/50",
+                            checked
+                              ? "border-primary/40 bg-primary/5"
+                              : "border-border bg-background",
+                          ].join(" ")}
+                        >
+                          <Checkbox
+                            checked={checked}
+                            onCheckedChange={(isChecked) =>
+                              toggleDay(day, !!isChecked)
+                            }
+                            className="size-4"
+                          />
+
+                          <span className="text-sm font-medium text-foreground">
+                            {day}
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </FieldGroup>
+
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            );
+          }}
         />
       </CardContent>
     </Card>

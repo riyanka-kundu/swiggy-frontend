@@ -1,15 +1,18 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { verifyRestaurantOtp } from "@/redux/slice/partner-slice";
 import type { AppDispatch, RootState } from "@/redux/store/store";
 import { partnerOtpSchema, TPartnerOtpPayload } from "@/schema/partner-otp";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 
@@ -24,14 +27,17 @@ function PartnerOtpForm() {
   const { loading } = useSelector((state: RootState) => state.partner);
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<TPartnerOtpPayload>({
     resolver: zodResolver(partnerOtpSchema),
+    defaultValues: { otp: "" },
   });
 
-  const onSubmit = async (data: TPartnerOtpPayload) => {
+  const verify = async (otp: string) => {
+    if (loading) return;
+
     if (!email) {
       toast.error("Email not found.");
       return;
@@ -41,7 +47,7 @@ function PartnerOtpForm() {
       await dispatch(
         verifyRestaurantOtp({
           email,
-          otp: data.otp,
+          otp,
         }),
       ).unwrap();
 
@@ -52,6 +58,8 @@ function PartnerOtpForm() {
       toast.error(error as string);
     }
   };
+
+  const onSubmit = (data: TPartnerOtpPayload) => verify(data.otp);
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
@@ -66,24 +74,41 @@ function PartnerOtpForm() {
 
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            <div>
-              <Input
-                placeholder="Enter 6 digit OTP"
-                maxLength={6}
-                inputMode="numeric"
-                {...register("otp")}
+            <div className="flex flex-col items-center gap-3">
+              <Controller
+                name="otp"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <InputOTP
+                    {...field}
+                    maxLength={6}
+                    disabled={loading}
+                    onComplete={verify}
+                    aria-invalid={fieldState.invalid}
+                  >
+                    <InputOTPGroup>
+                      {Array.from({ length: 6 }).map((_, index) => (
+                        <InputOTPSlot key={index} index={index} />
+                      ))}
+                    </InputOTPGroup>
+                  </InputOTP>
+                )}
               />
 
               {errors.otp && (
-                <p className="mt-1 text-sm text-red-500">
+                <p className="mt-2 text-sm text-red-500">
                   {errors.otp.message}
                 </p>
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Verifying..." : "Verify OTP"}
-            </Button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-lg bg-orange-500 py-4 font-bold text-white disabled:opacity-50"
+            >
+              {loading ? "VERIFYING..." : "VERIFY OTP"}
+            </button>
           </form>
         </CardContent>
       </Card>

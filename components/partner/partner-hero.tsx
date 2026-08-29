@@ -3,12 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 
 type PartnerHeroProps = {
   activeTab: "delivery" | "dineout";
   email: string;
   setEmail: (value: string) => void;
   onContinue: () => void;
+  loading: boolean;
 };
 
 export default function PartnerHero({
@@ -16,6 +18,7 @@ export default function PartnerHero({
   email,
   setEmail,
   onContinue,
+  loading,
 }: PartnerHeroProps) {
   return (
     <section
@@ -73,13 +76,22 @@ export default function PartnerHero({
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
             />
 
             <Button
               onClick={onContinue}
+              disabled={loading}
               className="mt-5 h-12 w-full rounded-xl"
             >
-              Continue
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Sending OTP…
+                </>
+              ) : (
+                "Continue"
+              )}
             </Button>
 
             <p className="mt-5 text-center text-xs text-muted-foreground">

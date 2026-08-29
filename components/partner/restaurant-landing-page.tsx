@@ -7,17 +7,19 @@ import PartnerHero from "@/components/partner/partner-hero";
 import PartnerToggle from "@/components/partner/partner-toggle";
 
 import { applyRestaurant } from "@/redux/slice/partner-slice";
-import type { AppDispatch } from "@/redux/store/store";
+import type { AppDispatch, RootState } from "@/redux/store/store";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 
 export default function RestaurantLandingPage() {
   const router = useRouter();
 
   const dispatch = useDispatch<AppDispatch>();
+
+  const { loading } = useSelector((state: RootState) => state.partner);
 
   const [activeTab, setActiveTab] = useState<"delivery" | "dineout">(
     "delivery",
@@ -30,6 +32,8 @@ export default function RestaurantLandingPage() {
       toast.error("Please enter your email");
       return;
     }
+
+    if (loading) return;
 
     console.log("Sending payload:", {
       email,
@@ -61,6 +65,7 @@ export default function RestaurantLandingPage() {
         email={email}
         setEmail={setEmail}
         onContinue={handleContinue}
+        loading={loading}
       />
 
       <PartnerToggle activeTab={activeTab} onChange={setActiveTab} />
