@@ -2,7 +2,6 @@
 
 import Menu from "@/components/food-menu-details/menu/food-menu";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 export default function DashboardAddFoodPage() {
   const router = useRouter();
@@ -18,7 +17,6 @@ export default function DashboardAddFoodPage() {
 
       <Menu
         onNext={() => {
-          toast.success("Food item added successfully!");
           router.push("/partner/dashboard/menu");
         }}
       />

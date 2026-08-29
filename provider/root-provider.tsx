@@ -44,7 +44,6 @@ export default function RootProviders({
             </ThemeProvider>
           </QueryClientProvider>
         </CookiesProvider>
-        <Toaster position="top-right" theme="dark" richColors duration={3000} />
       </Provider>
     </>
   );
