@@ -68,6 +68,7 @@ export default function Login({ onSuccess }: Props) {
             id="email"
             {...register("email")}
             type="email"
+            autoComplete="email"
             placeholder="you@example.com"
             className="h-11"
           />
@@ -84,6 +85,7 @@ export default function Login({ onSuccess }: Props) {
               id="password"
               {...register("password")}
               type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
               placeholder="••••••••"
               className="h-11 pr-11"
             />

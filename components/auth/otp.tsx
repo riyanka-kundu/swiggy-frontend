@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { Cookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +17,12 @@ import { verifyOtp } from "@/redux/slice/auth-slice";
 
 import { AppDispatch, RootState } from "@/redux/store/store";
 
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+
 export default function Otpverify() {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -25,7 +31,7 @@ export default function Otpverify() {
   const cookies = new Cookies();
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<TVerifyOtpForm>({
@@ -35,7 +41,9 @@ export default function Otpverify() {
     },
   });
 
-  const onSubmit = async (data: TVerifyOtpForm) => {
+  const verify = async (otp: string) => {
+    if (loading) return;
+
     try {
       const userId = cookies.get("id");
 
@@ -45,7 +53,7 @@ export default function Otpverify() {
       }
 
       const payload: TVerifyOtpPayload = {
-        otp: data.otp,
+        otp,
         userId,
       };
 
@@ -59,25 +67,30 @@ export default function Otpverify() {
     }
   };
 
+  const onSubmit = (data: TVerifyOtpForm) => verify(data.otp);
+
   return (
     <div className="w-full max-w-md mx-auto">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        <div>
-          <input
-            {...register("otp")}
-            type="text"
-            inputMode="numeric"
-            maxLength={6}
-            placeholder="Enter OTP"
-            className="
-              w-full
-              rounded-lg
-              border
-              p-4
-              outline-none
-              focus:ring-2
-              focus:ring-orange-500
-            "
+        <div className="flex flex-col items-center gap-3">
+          <Controller
+            name="otp"
+            control={control}
+            render={({ field, fieldState }) => (
+              <InputOTP
+                {...field}
+                maxLength={6}
+                disabled={loading}
+                onComplete={verify}
+                aria-invalid={fieldState.invalid}
+              >
+                <InputOTPGroup>
+                  {Array.from({ length: 6 }).map((_, index) => (
+                    <InputOTPSlot key={index} index={index} />
+                  ))}
+                </InputOTPGroup>
+              </InputOTP>
+            )}
           />
 
           {errors.otp && (
