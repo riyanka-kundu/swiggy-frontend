@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUserRestaurantList } from "@/hooks/user";
-import { formatTime } from "@/lib/utils";
+import { cn, formatTime } from "@/lib/utils";
 import { RestaurantListItem } from "@/type";
 import { Clock, MapPin, Store, UtensilsCrossed } from "lucide-react";
 
@@ -32,16 +32,18 @@ function RestaurantCard({ restaurant }: { restaurant: RestaurantListItem }) {
           </span>
 
           <span
-            className={`absolute right-3 top-3 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm ${
+            className={cn(
+              "absolute right-3 top-3 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm",
               isOpen
                 ? "bg-green-600 text-white"
-                : "bg-muted text-muted-foreground"
-            }`}
+                : "bg-muted text-muted-foreground",
+            )}
           >
             <span
-              className={`h-1.5 w-1.5 rounded-full ${
-                isOpen ? "animate-pulse bg-white" : "bg-muted-foreground"
-              }`}
+              className={cn(
+                "h-1.5 w-1.5 rounded-full",
+                isOpen ? "animate-pulse bg-white" : "bg-muted-foreground",
+              )}
             />
             {isOpen ? "Open now" : "Closed"}
           </span>

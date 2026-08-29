@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAddToCart } from "@/hooks/user";
-import { buildImageUrl, formatPrice } from "@/lib/utils";
+import { buildImageUrl, cn, formatPrice } from "@/lib/utils";
 import { RootState } from "@/redux/store/store";
 import { Food } from "@/type";
 import { Loader2, Plus, UtensilsCrossed } from "lucide-react";
@@ -36,9 +36,10 @@ function FoodCard({ food }: { food: Food }) {
 
         {/* Veg / Non-Veg badge */}
         <span
-          className={`absolute left-3 top-3 flex h-5 w-5 items-center justify-center rounded-md border-2 border-background shadow-sm ${
-            food.isVeg ? "bg-green-600" : "bg-red-600"
-          }`}
+          className={cn(
+            "absolute left-3 top-3 flex h-5 w-5 items-center justify-center rounded-md border-2 border-background shadow-sm",
+            food.isVeg ? "bg-green-600" : "bg-red-600",
+          )}
         >
           <span className="h-2 w-2 rounded-full bg-white" />
         </span>

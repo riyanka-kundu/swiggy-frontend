@@ -1,5 +1,6 @@
 "use client";
 import CustomCarousel from "@/components/common/custom-carousel";
+import { cn } from "@/lib/utils";
 
 import { carouselSlides } from "@/data/home";
 
@@ -10,19 +11,19 @@ export default function FeaturedCarousel() {
       itemClassName="basis-full"
       renderItem={(slide) => (
         <div
-          className={`
-            h-72
-            md:h-96
-            flex
-            items-center
-            justify-center
-            gap-8
-            rounded-2xl
-            bg-linear-to-br
-            ${slide.gradient}
-            px-8
-            md:px-16
-          `}
+          className={cn(
+            "h-72",
+            "md:h-96",
+            "flex",
+            "items-center",
+            "justify-center",
+            "gap-8",
+            "rounded-2xl",
+            "bg-linear-to-br",
+            slide.gradient,
+            "px-8",
+            "md:px-16",
+          )}
         >
           <span className="text-7xl md:text-9xl">{slide.emoji}</span>
 

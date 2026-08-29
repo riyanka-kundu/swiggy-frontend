@@ -8,7 +8,7 @@ import {
   useRestaurantOrders,
   useUpdateOrderStatus,
 } from "@/hooks/restaurant-owner";
-import { formatDate, formatPrice, buildImageUrl } from "@/lib/utils";
+import { cn, formatDate, formatPrice, buildImageUrl } from "@/lib/utils";
 import { Order } from "@/type";
 import {
   AlertTriangle,
@@ -104,10 +104,12 @@ export default function RestaurantOrdersPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${activeTab === tab.id
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground hover:bg-muted/70"
-              }`}
+            className={cn(
+              "rounded-full px-4 py-1.5 text-xs font-medium transition-colors",
+              activeTab === tab.id
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-muted/70",
+            )}
           >
             {tab.label}
           </button>
@@ -241,9 +243,10 @@ export default function RestaurantOrdersPage() {
                               </div>
                             )}
                             <span
-                              className={`absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 border-card ${
-                                item.food?.isVeg ? "bg-green-500" : "bg-red-500"
-                              }`}
+                              className={cn(
+                                "absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 border-card",
+                                item.food?.isVeg ? "bg-green-500" : "bg-red-500",
+                              )}
                             />
                           </div>
 

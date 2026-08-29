@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useMyOrders } from "@/hooks/user";
-import { buildImageUrl, formatDate, formatPrice } from "@/lib/utils";
+import { buildImageUrl, cn, formatDate, formatPrice } from "@/lib/utils";
 import { RootState } from "@/redux/store/store";
 import { Order } from "@/type";
 import {
@@ -182,7 +182,7 @@ export default function MyOrdersPage() {
                       </div>
                     </div>
 
-                    <Badge className={`${statusInfo.color} px-3 py-1`}>
+                    <Badge className={cn(statusInfo.color, "px-3 py-1")}>
                       <StatusIcon className="mr-1.5 h-3.5 w-3.5" />
                       {statusInfo.label}
                     </Badge>

@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useCart } from "@/hooks/user";
+import { cn } from "@/lib/utils";
 import { logout } from "@/redux/slice/auth-slice";
 import { AppDispatch, RootState } from "@/redux/store/store";
 import {
@@ -127,9 +128,10 @@ export default function HomeNavbar() {
                       {data.data?.name}
                     </span>
                     <ChevronDown
-                      className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${
-                        dropdownOpen ? "rotate-180" : ""
-                      }`}
+                      className={cn(
+                        "h-3.5 w-3.5 text-muted-foreground transition-transform",
+                        dropdownOpen ? "rotate-180" : "",
+                      )}
                     />
                   </button>
 

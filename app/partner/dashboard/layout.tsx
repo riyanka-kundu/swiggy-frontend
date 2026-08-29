@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { logout } from "@/redux/slice/auth-slice";
 import { AppDispatch, RootState } from "@/redux/store/store";
+import { cn } from "@/lib/utils";
 
 import {
   ChefHat,
@@ -95,11 +96,12 @@ function SidebarContent({
               key={href}
               href={href}
               onClick={onNavigate}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isActive
                   ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-accent hover:text-foreground"
-              }`}
+                  : "text-muted-foreground hover:bg-accent hover:text-foreground",
+              )}
             >
               <Icon className="h-4 w-4 shrink-0" />
               {label}

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import HomeNavbar from "@/components/home/navbar";
 import { Separator } from "@/components/ui/separator";
 import { useAddToCart, useCart, usePlaceOrder, useRemoveFromCart } from "@/hooks/user";
-import { buildImageUrl, formatPrice } from "@/lib/utils";
+import { buildImageUrl, cn, formatPrice } from "@/lib/utils";
 import {
   ArrowLeft,
   Loader2,
@@ -118,7 +118,10 @@ function CartContent() {
                         </div>
                       )}
                       <span
-                        className={`absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full border-2 border-background text-[8px] ${food.isVeg ? "bg-green-500" : "bg-red-500"}`}
+                        className={cn(
+                          "absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full border-2 border-background text-[8px]",
+                          food.isVeg ? "bg-green-500" : "bg-red-500",
+                        )}
                       />
                     </div>
 

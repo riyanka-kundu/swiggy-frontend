@@ -36,7 +36,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { DAYS, formatDay, formatTime, maskAccountNumber } from "@/lib/utils";
+import { cn, DAYS, formatDay, formatTime, maskAccountNumber } from "@/lib/utils";
 import Link from "next/link";
 
 const MyRestaurant = () => {
@@ -381,17 +381,19 @@ const MyRestaurant = () => {
                 return (
                   <div
                     key={day}
-                    className={`flex min-h-14 items-center justify-between gap-3 px-4 py-3 sm:px-6 ${
-                      index !== DAYS.length - 1 ? "border-b" : ""
-                    }`}
+                    className={cn(
+                      "flex min-h-14 items-center justify-between gap-3 px-4 py-3 sm:px-6",
+                      index !== DAYS.length - 1 ? "border-b" : "",
+                    )}
                   >
                     {/* Day */}
 
                     <div className="flex items-center gap-3">
                       <span
-                        className={`size-2.5 shrink-0 rounded-full ${
-                          isOpen ? "bg-green-500" : "bg-muted-foreground/30"
-                        }`}
+                        className={cn(
+                          "size-2.5 shrink-0 rounded-full",
+                          isOpen ? "bg-green-500" : "bg-muted-foreground/30",
+                        )}
                       />
 
                       <span className="text-sm font-medium sm:text-base">

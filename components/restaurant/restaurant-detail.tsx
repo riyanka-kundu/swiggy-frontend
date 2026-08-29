@@ -5,7 +5,7 @@ import FoodCard from "@/components/home/food-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useRestaurantFoods } from "@/hooks/user";
-import { formatTime } from "@/lib/utils";
+import { cn, formatTime } from "@/lib/utils";
 import { RootState } from "@/redux/store/store";
 import {
   ArrowLeft,
@@ -126,16 +126,18 @@ export default function RestaurantDetail({
                     {info.restaurantName}
                   </h1>
                   <span
-                    className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide ${
+                    className={cn(
+                      "flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide",
                       isOpen
                         ? "bg-green-600 text-white"
-                        : "bg-muted text-muted-foreground"
-                    }`}
+                        : "bg-muted text-muted-foreground",
+                    )}
                   >
                     <span
-                      className={`h-1.5 w-1.5 rounded-full ${
-                        isOpen ? "animate-pulse bg-white" : "bg-muted-foreground"
-                      }`}
+                      className={cn(
+                        "h-1.5 w-1.5 rounded-full",
+                        isOpen ? "animate-pulse bg-white" : "bg-muted-foreground",
+                      )}
                     />
                     {isOpen ? "Open now" : "Closed"}
                   </span>

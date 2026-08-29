@@ -8,7 +8,7 @@ import {
   useMenuList,
   useToggleAvailability,
 } from "@/hooks/restaurant-owner";
-import { buildImageUrl, formatPrice } from "@/lib/utils";
+import { buildImageUrl, cn, formatPrice } from "@/lib/utils";
 import { Food } from "@/type";
 import {
   AlertTriangle,
@@ -101,7 +101,10 @@ function FoodCard({ food }: { food: Food }) {
 
         {/* Veg/Non-veg dot */}
         <span
-          className={`absolute left-3 top-3 h-4 w-4 rounded-full border-2 border-background ${food.isVeg ? "bg-green-500" : "bg-red-500"}`}
+          className={cn(
+            "absolute left-3 top-3 h-4 w-4 rounded-full border-2 border-background",
+            food.isVeg ? "bg-green-500" : "bg-red-500",
+          )}
         />
       </div>
 
@@ -133,11 +136,12 @@ function FoodCard({ food }: { food: Food }) {
           <button
             onClick={() => toggle(food._id)}
             disabled={toggling}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+            className={cn(
+              "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50",
               food.isAvailable
                 ? "bg-green-100 text-green-700 hover:bg-green-200"
-                : "bg-muted text-muted-foreground hover:bg-muted/70"
-            }`}
+                : "bg-muted text-muted-foreground hover:bg-muted/70",
+            )}
           >
             {toggling ? (
               <Loader2 className="h-3 w-3 animate-spin" />
@@ -207,11 +211,12 @@ export default function MenuPage() {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-colors ${
+                className={cn(
+                  "rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-colors",
                   filter === f
                     ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/70"
-                }`}
+                    : "bg-muted text-muted-foreground hover:bg-muted/70",
+                )}
               >
                 {f}
               </button>
