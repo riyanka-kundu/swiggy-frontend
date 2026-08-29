@@ -10,6 +10,7 @@ import { RootState } from "@/redux/store/store";
 import { Order } from "@/type";
 import {
   AlertTriangle,
+  ArrowLeft,
   CheckCircle2,
   Clock,
   Loader2,
@@ -94,11 +95,22 @@ export default function MyOrdersPage() {
       <HomeNavbar />
       <div className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">My Orders</h1>
-        <p className="text-sm text-muted-foreground">
-          Track and review all your orders
-        </p>
+      <div className="flex items-center gap-3">
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-9 w-9 shrink-0"
+          aria-label="Go back"
+          onClick={() => router.back()}
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">My Orders</h1>
+          <p className="text-sm text-muted-foreground">
+            Track and review all your orders
+          </p>
+        </div>
       </div>
 
       {isLoading ? (

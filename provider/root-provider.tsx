@@ -37,9 +37,10 @@ export default function RootProviders({
               {children}
               <Toaster
                 duration={3000}
-                position="top-right"
+                position="bottom-right"
                 richColors
                 visibleToasts={5}
+                mobileOffset={{ bottom: 24, right: 16 }}
               />
             </ThemeProvider>
           </QueryClientProvider>

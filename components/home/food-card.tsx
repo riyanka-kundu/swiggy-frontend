@@ -52,16 +52,16 @@ function FoodCard({ food }: { food: Food }) {
 
       <CardContent className="p-4">
         <div className="mb-2">
-          <h3 className="truncate font-bold text-base">{food.itemName}</h3>
+          <h3 className="truncate text-base font-bold">{food.itemName}</h3>
           {food?.restaurant?._id ? (
             <Link
               href={`/restaurant/${food?.restaurant?._id}`}
-              className="text-xs text-muted-foreground truncate hover:text-primary transition-colors"
+              className="truncate text-xs text-muted-foreground transition-colors hover:text-primary"
             >
               {food?.restaurant?.restaurantName} · {food.cuisine}
             </Link>
           ) : (
-            <p className="text-xs text-muted-foreground truncate">
+            <p className="truncate text-xs text-muted-foreground">
               {food?.restaurant?.restaurantName} · {food.cuisine}
             </p>
           )}
@@ -84,7 +84,7 @@ function FoodCard({ food }: { food: Food }) {
               size="sm"
               disabled={isPending || !food.isAvailable}
               onClick={() => addToCart({ foodId: food._id, quantity: 1 })}
-              className="h-8 rounded-lg px-3 text-xs font-semibold"
+              className="h-8 shrink-0 rounded-lg px-3 text-xs font-semibold"
             >
               {isPending ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -100,7 +100,7 @@ function FoodCard({ food }: { food: Food }) {
               <Button
                 size="sm"
                 variant="outline"
-                className="h-8 rounded-lg px-3 text-xs font-semibold"
+                className="h-8 shrink-0 rounded-lg px-3 text-xs font-semibold"
               >
                 Sign in to Order
               </Button>

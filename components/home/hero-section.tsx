@@ -28,28 +28,28 @@ export default function HeroSection() {
         </p>
 
         {/* Search */}
-        <div className="mx-auto mt-10 flex max-w-2xl flex-col overflow-hidden rounded-xl bg-[#FBF4E8] shadow-[0_20px_60px_-15px_rgba(228,87,46,0.5)] sm:flex-row">
+        <div className="mx-auto mt-10 flex max-w-2xl flex-col overflow-hidden rounded-xl border border-border bg-card shadow-[0_20px_60px_-15px_rgba(228,87,46,0.5)] sm:flex-row">
           {/* Location */}
-          <div className="flex items-center gap-2 border-[#0B0906]/10 px-4 py-4 sm:border-r">
-            <MapPin size={18} className="shrink-0 text-[#0B0906]/40" />
+          <div className="flex items-center gap-2 border-border px-4 py-4 sm:border-r">
+            <MapPin size={18} className="shrink-0 text-muted-foreground/60" />
 
             <input
               placeholder="Enter delivery location"
-              className="w-full bg-transparent text-sm text-[#0B0906] placeholder:text-[#0B0906]/40 focus:outline-none"
+              className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
             />
           </div>
 
           {/* Search */}
           <div className="flex flex-1 items-center gap-2 px-4 py-4">
-            <Search size={18} className="shrink-0 text-[#0B0906]/40" />
+            <Search size={18} className="shrink-0 text-muted-foreground/60" />
 
             <input
               placeholder="Search for food..."
-              className="w-full bg-transparent text-sm text-[#0B0906] placeholder:text-[#0B0906]/40 focus:outline-none"
+              className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
             />
           </div>
 
-          <button className="bg-background px-8 py-4 text-sm font-semibold text-foreground transition hover:bg-accent">
+          <button className="bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground transition hover:opacity-90">
             Find food
           </button>
         </div>

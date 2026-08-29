@@ -26,7 +26,7 @@ function RestaurantCard({ restaurant }: { restaurant: RestaurantListItem }) {
   return (
     <Link href={`/restaurant/${restaurant._id}`} className="group">
       <Card className="h-full overflow-hidden transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-        <div className="relative flex h-32 items-center justify-center bg-gradient-to-br from-primary/15 via-primary/5 to-transparent">
+        <div className="relative flex h-32 items-center justify-center bg-gradient-to-br from-primary/15 via-primary/5 to-transparent sm:h-32">
           <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-xl font-black text-primary-foreground shadow-md transition-transform duration-300 group-hover:scale-110">
             {initials || <UtensilsCrossed className="h-7 w-7" />}
           </span>
