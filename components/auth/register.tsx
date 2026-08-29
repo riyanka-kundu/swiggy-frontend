@@ -93,6 +93,8 @@ export default function RegisterPage() {
         <input
           {...registerField("mobile_Number")}
           autoComplete="tel"
+          inputMode="numeric"
+          maxLength={10}
           placeholder="Mobile Number"
           className="w-full rounded-lg border p-4 outline-none focus:ring-2 focus:ring-orange-500"
         />
