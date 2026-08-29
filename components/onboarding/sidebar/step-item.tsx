@@ -32,7 +32,7 @@ export default function StepItem({
       {!isLast && (
         <span
           className={cn(
-            "absolute left-8 top-[3.25rem] bottom-0 z-0 w-0.5",
+            "absolute left-8 top-13 bottom-0 z-0 w-0.5",
             completed ? "bg-green-600" : "bg-muted-foreground/30",
           )}
         />
