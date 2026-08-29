@@ -1,7 +1,7 @@
 "use client";
 
-import HomeNavbar from "@/components/home/navbar";
 import FoodCard from "@/components/home/food-card";
+import HomeNavbar from "@/components/home/navbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useRestaurantFoods } from "@/hooks/user";
@@ -55,8 +55,7 @@ export default function RestaurantDetail({
           </div>
           <h2 className="text-xl font-bold">Sign in to view this menu</h2>
           <p className="max-w-xs text-sm text-muted-foreground">
-            Create an account or sign in to explore dishes from this
-            restaurant.
+            Create an account or sign in to explore dishes from this restaurant.
           </p>
           <Link href="/signin">
             <Button className="mt-2">
@@ -100,7 +99,7 @@ export default function RestaurantDetail({
       <HomeNavbar />
 
       {/* Restaurant header */}
-      <section className="border-b border-border bg-gradient-to-br from-primary/10 via-primary/5 to-transparent px-6 py-10 md:px-10">
+      <section className="border-b border-border bg-linear-to-br from-primary/10 via-primary/5 to-transparent px-6 py-10 md:px-10">
         <div className="mx-auto flex max-w-6xl flex-col gap-6 sm:flex-row sm:items-center">
           <Link href="/" aria-label="Back to home">
             <Button variant="outline" size="icon" className="h-9 w-9 shrink-0">
@@ -136,7 +135,9 @@ export default function RestaurantDetail({
                     <span
                       className={cn(
                         "h-1.5 w-1.5 rounded-full",
-                        isOpen ? "animate-pulse bg-white" : "bg-muted-foreground",
+                        isOpen
+                          ? "animate-pulse bg-white"
+                          : "bg-muted-foreground",
                       )}
                     />
                     {isOpen ? "Open now" : "Closed"}
@@ -181,13 +182,18 @@ export default function RestaurantDetail({
           <p className="mb-1 text-xs font-semibold uppercase tracking-[0.25em] text-primary">
             Menu
           </p>
-          <h2 className="text-2xl font-black md:text-3xl">What&apos;s cooking</h2>
+          <h2 className="text-2xl font-black md:text-3xl">
+            What&apos;s cooking
+          </h2>
         </div>
 
         {isLoading ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-64 animate-pulse rounded-2xl bg-muted" />
+              <div
+                key={i}
+                className="h-64 animate-pulse rounded-2xl bg-muted"
+              />
             ))}
           </div>
         ) : foods.length === 0 ? (

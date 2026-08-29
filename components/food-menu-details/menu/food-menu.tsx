@@ -12,7 +12,7 @@ import { menuSchema, TMenu, TMenuInput } from "@/schema/restaurant-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
-import { FieldErrors, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
 type Props = {
@@ -111,43 +111,14 @@ export default function Menu({ onNext }: Props) {
     }
   }
 
-  const getErrorMessages = (errs: FieldErrors<TMenuInput>): string[] => {
-    const messages: string[] = [];
-    const extract = (obj: Record<string, unknown>) => {
-      for (const key of Object.keys(obj)) {
-        const val = obj[key];
-        if (!val) continue;
-        if (
-          typeof val === "object" &&
-          "message" in val &&
-          typeof (val as { message?: unknown }).message === "string"
-        ) {
-          messages.push((val as { message: string }).message);
-        } else if (typeof val === "object") {
-          extract(val as Record<string, unknown>);
-        }
-      }
-    };
-    extract(errs as unknown as Record<string, unknown>);
-    return Array.from(new Set(messages));
-  };
-
-  const errorMessages = getErrorMessages(form.formState.errors);
-
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      {(errorMessages.length > 0 || serverError) && (
+      {serverError && (
         <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-destructive">
           <div className="flex items-center gap-2 text-sm font-semibold">
             <AlertCircle className="h-4.5 w-4.5 shrink-0" />
-            <span>Please fix the following issues before continuing:</span>
+            <span>{serverError}</span>
           </div>
-          <ul className="mt-2 list-inside list-disc space-y-1 text-xs sm:text-sm">
-            {serverError && <li>{serverError}</li>}
-            {errorMessages.map((msg, i) => (
-              <li key={i}>{msg}</li>
-            ))}
-          </ul>
         </div>
       )}
 
