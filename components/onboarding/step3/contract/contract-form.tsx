@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useMyRestaurant } from "@/hooks/restaurant-owner";
-import AgreementCard from "@/components/onboarding/step4/agreement-card";
-import DeclareActionCard from "@/components/onboarding/step4/declare-action-card";
+import AgreementCard from "@/components/onboarding/step3/agreement-card";
+import DeclareActionCard from "@/components/onboarding/step3/declare-action-card";
 import { Button } from "@/components/ui/button";
 import { restaurantContract } from "@/redux/slice/restaurant-slice";
 import { AppDispatch } from "@/redux/store/store";

@@ -48,17 +48,64 @@ export const restaurantSchema = z.object({
 });
 
 export const restaurantDocSchema = z.object({
-  outletType: z.string().min(1, "Outlet type is required"),
+  outletType: z
+    .string()
+    .min(1, "Outlet type is required")
+    .refine(
+      (value) =>
+        ["Restaurant", "Cloud Kitchen", "Cafe", "Bakery", "Sweet Shop"].includes(
+          value,
+        ),
+      { message: "Invalid outlet type" },
+    ),
 
-  pan: z.string().min(1, "PAN number is required"),
+  pan: z
+    .string()
+    .min(1, "PAN number is required")
+    .trim()
+    .transform((value) => value.toUpperCase())
+    .pipe(
+      z
+        .string()
+        .regex(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, "Invalid PAN number"),
+    ),
 
-  gstin: z.string().min(1, "GSTIN is required"),
+  gstin: z
+    .string()
+    .min(1, "GSTIN is required")
+    .trim()
+    .transform((value) => value.toUpperCase())
+    .pipe(
+      z
+        .string()
+        .regex(
+          /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+          "Invalid GSTIN",
+        ),
+    ),
 
-  ifscCode: z.string().min(1, "IFSC code is required"),
+  ifscCode: z
+    .string()
+    .min(1, "IFSC code is required")
+    .trim()
+    .transform((value) => value.toUpperCase())
+    .pipe(
+      z
+        .string()
+        .regex(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC code"),
+    ),
 
-  bankAccountNumber: z.string().min(1, "Bank account number is required"),
+  bankAccountNumber: z
+    .string()
+    .min(1, "Bank account number is required")
+    .trim()
+    .regex(/^[0-9]{9,18}$/, "Invalid bank account number"),
 
-  fssaiNumber: z.string().min(1, "FSSAI number is required"),
+  fssaiNumber: z
+    .string()
+    .min(1, "FSSAI number is required")
+    .trim()
+    .regex(/^[0-9]{14}$/, "Invalid FSSAI certificate number"),
 });
 
 export const menuSchema = z.object({
