@@ -17,10 +17,13 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { buildImageUrl } from "@/lib/utils";
+import { editFoodSchema, TEditFoodForm } from "@/schema/edit-food";
 import { Food } from "@/type";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { ChangeEvent, SubmitEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 const CATEGORIES = ["Starter", "Main Course", "Dessert", "Beverage", "Snack"];
 
@@ -35,27 +38,33 @@ export const EditFoodForm = ({
   onSave,
   isPending,
 }: EditFoodFormProps) => {
-  const [itemName, setItemName] = useState(food.itemName ?? "");
-  const [description, setDescription] = useState(food.description ?? "");
-  const [foodType, setFoodType] = useState(food.foodType ?? "");
-  const [category, setCategory] = useState(food.category ?? "");
-  const [cuisine, setCuisine] = useState(food.cuisine ?? "");
-  const [isVeg, setIsVeg] = useState(food.isVeg ?? true);
-  const [basePrice, setBasePrice] = useState(
-    food.basePrice != null ? String(food.basePrice) : "",
-  );
-  const [discountPrice, setDiscountPrice] = useState(
-    food.discountPrice ? String(food.discountPrice) : "",
-  );
-  const [gst, setGst] = useState(food.gst != null ? String(food.gst) : "");
-  const [preparationTime, setPreparationTime] = useState(
-    food.preparationTime != null ? String(food.preparationTime) : "",
-  );
-  const [isAvailable, setIsAvailable] = useState(food.isAvailable ?? true);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
     food.image ? buildImageUrl(food.image) : null,
   );
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TEditFoodForm>({
+    resolver: zodResolver(editFoodSchema),
+    defaultValues: {
+      itemName: food.itemName ?? "",
+      description: food.description ?? "",
+      foodType: food.foodType ?? "",
+      category: food.category ?? "",
+      cuisine: food.cuisine ?? "",
+      isVeg: food.isVeg ?? true,
+      basePrice: food.basePrice != null ? String(food.basePrice) : "",
+      discountPrice: food.discountPrice ? String(food.discountPrice) : "",
+      gst: food.gst != null ? String(food.gst) : "",
+      preparationTime:
+        food.preparationTime != null ? String(food.preparationTime) : "",
+      isAvailable: food.isAvailable ?? true,
+    },
+  });
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
@@ -63,23 +72,24 @@ export const EditFoodForm = ({
     setImagePreview(file ? URL.createObjectURL(file) : null);
   };
 
-  const handleSubmit = (e: SubmitEvent) => {
-    e.preventDefault();
-
+  const onSubmit = (data: TEditFoodForm) => {
     const formData = new FormData();
-    formData.append("itemName", itemName.trim());
-    formData.append("description", description || "");
-    formData.append("category", category || "Main Course");
-    formData.append("cuisine", cuisine || "");
-    formData.append("foodType", foodType || "Main Course");
-    formData.append("isVeg", String(isVeg));
-    formData.append("isAvailable", String(isAvailable));
-    formData.append("basePrice", String(Number(basePrice) || 0));
-    if (discountPrice !== "" && discountPrice !== null) {
-      formData.append("discountPrice", String(Number(discountPrice) || 0));
+    formData.append("itemName", data.itemName.trim());
+    formData.append("description", data.description || "");
+    formData.append("category", data.category || "Main Course");
+    formData.append("cuisine", data.cuisine || "");
+    formData.append("foodType", data.foodType || "Main Course");
+    formData.append("isVeg", String(data.isVeg));
+    formData.append("isAvailable", String(data.isAvailable));
+    formData.append("basePrice", String(Number(data.basePrice) || 0));
+    if (data.discountPrice && data.discountPrice !== "") {
+      formData.append("discountPrice", String(Number(data.discountPrice) || 0));
     }
-    formData.append("gst", String(Number(gst) || 0));
-    formData.append("preparationTime", String(Number(preparationTime) || 0));
+    formData.append("gst", String(Number(data.gst) || 0));
+    formData.append(
+      "preparationTime",
+      String(Number(data.preparationTime) || 0),
+    );
     if (imageFile) {
       formData.append("image", imageFile);
     }
@@ -88,7 +98,7 @@ export const EditFoodForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle>Basic Details</CardTitle>
@@ -102,60 +112,74 @@ export const EditFoodForm = ({
               <FieldLabel htmlFor="edit-item-name">Item Name</FieldLabel>
               <Input
                 id="edit-item-name"
-                value={itemName}
-                onChange={(e) => setItemName(e.target.value)}
+                {...register("itemName")}
                 placeholder="Paneer Butter Masala"
               />
+              {errors.itemName && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.itemName.message}
+                </p>
+              )}
             </Field>
 
             <Field>
               <FieldLabel htmlFor="edit-food-type">Food Type</FieldLabel>
-              <Select value={foodType} onValueChange={setFoodType}>
-                <SelectTrigger id="edit-food-type">
-                  <SelectValue placeholder="Select a food type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Controller
+                name="foodType"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger id="edit-food-type">
+                      <SelectValue placeholder="Select a food type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CATEGORIES.map((c) => (
+                        <SelectItem key={c} value={c}>
+                          {c}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </Field>
 
             <Field>
               <FieldLabel htmlFor="edit-category">Category</FieldLabel>
               <Input
                 id="edit-category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                {...register("category")}
                 placeholder="Snack, Main Course…"
               />
             </Field>
 
             <Field>
               <FieldLabel htmlFor="edit-veg">Veg / Non-Veg</FieldLabel>
-              <Select
-                value={isVeg ? "veg" : "non-veg"}
-                onValueChange={(v) => setIsVeg(v === "veg")}
-              >
-                <SelectTrigger id="edit-veg">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="veg">Veg</SelectItem>
-                  <SelectItem value="non-veg">Non-Veg</SelectItem>
-                </SelectContent>
-              </Select>
+              <Controller
+                name="isVeg"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value ? "veg" : "non-veg"}
+                    onValueChange={(v) => field.onChange(v === "veg")}
+                  >
+                    <SelectTrigger id="edit-veg">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="veg">Veg</SelectItem>
+                      <SelectItem value="non-veg">Non-Veg</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </Field>
 
             <Field>
               <FieldLabel htmlFor="edit-cuisine">Cuisine</FieldLabel>
               <Input
                 id="edit-cuisine"
-                value={cuisine}
-                onChange={(e) => setCuisine(e.target.value)}
+                {...register("cuisine")}
                 placeholder="Indian, Chinese"
               />
             </Field>
@@ -164,8 +188,7 @@ export const EditFoodForm = ({
               <FieldLabel htmlFor="edit-description">Description</FieldLabel>
               <Textarea
                 id="edit-description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                {...register("description")}
                 rows={3}
                 placeholder="Rich, creamy tomato-based curry with paneer cubes."
               />
@@ -190,10 +213,14 @@ export const EditFoodForm = ({
                 type="number"
                 min={0}
                 step="0.01"
-                value={basePrice}
-                onChange={(e) => setBasePrice(e.target.value)}
+                {...register("basePrice")}
                 placeholder="249"
               />
+              {errors.basePrice && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.basePrice.message}
+                </p>
+              )}
             </Field>
 
             <Field>
@@ -205,10 +232,14 @@ export const EditFoodForm = ({
                 type="number"
                 min={0}
                 step="0.01"
-                value={discountPrice}
-                onChange={(e) => setDiscountPrice(e.target.value)}
+                {...register("discountPrice")}
                 placeholder="199"
               />
+              {errors.discountPrice && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.discountPrice.message}
+                </p>
+              )}
             </Field>
 
             <Field>
@@ -218,10 +249,14 @@ export const EditFoodForm = ({
                 type="number"
                 min={0}
                 step="0.01"
-                value={gst}
-                onChange={(e) => setGst(e.target.value)}
+                {...register("gst")}
                 placeholder="5"
               />
+              {errors.gst && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.gst.message}
+                </p>
+              )}
             </Field>
 
             <Field>
@@ -232,10 +267,14 @@ export const EditFoodForm = ({
                 id="edit-prep-time"
                 type="number"
                 min={0}
-                value={preparationTime}
-                onChange={(e) => setPreparationTime(e.target.value)}
+                {...register("preparationTime")}
                 placeholder="20"
               />
+              {errors.preparationTime && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.preparationTime.message}
+                </p>
+              )}
             </Field>
           </FieldGroup>
         </CardContent>
@@ -252,18 +291,24 @@ export const EditFoodForm = ({
           <FieldGroup className="space-y-5">
             <Field>
               <FieldLabel>Availability</FieldLabel>
-              <Select
-                value={isAvailable ? "available" : "unavailable"}
-                onValueChange={(v) => setIsAvailable(v === "available")}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="available">Available</SelectItem>
-                  <SelectItem value="unavailable">Unavailable</SelectItem>
-                </SelectContent>
-              </Select>
+              <Controller
+                name="isAvailable"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value ? "available" : "unavailable"}
+                    onValueChange={(v) => field.onChange(v === "available")}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="available">Available</SelectItem>
+                      <SelectItem value="unavailable">Unavailable</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </Field>
 
             <Field>

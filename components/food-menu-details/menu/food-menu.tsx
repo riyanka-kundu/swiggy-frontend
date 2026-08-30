@@ -71,10 +71,7 @@ export default function Menu({ onNext }: Props) {
       formData.append("description", data.description || "");
       formData.append("foodType", resolvedFoodType);
       formData.append("category", data.category || "Main Course");
-      formData.append(
-        "cuisine",
-        data.cuisine?.trim() || data.category || "",
-      );
+      formData.append("cuisine", data.cuisine?.trim() || data.category || "");
       formData.append("isVeg", String(data.foodType === "veg"));
       formData.append("basePrice", String(data.basePrice));
       if (data.discountPrice !== null && data.discountPrice !== undefined) {
