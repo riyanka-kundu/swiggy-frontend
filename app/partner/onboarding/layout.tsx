@@ -1,9 +1,10 @@
 import StepSidebar from "@/components/onboarding/sidebar/step-sidebar";
+import { ReactNode } from "react";
 
 export default function OnboardingLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <div className="mx-auto flex w-full gap-6 px-4 py-10">

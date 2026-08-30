@@ -7,14 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useMyOrders } from "@/hooks/user";
 import { buildImageUrl, cn, formatDate, formatPrice } from "@/lib/utils";
-import { RootState } from "@/redux/store/store";
 import { Order } from "@/type";
 import {
   AlertTriangle,
   ArrowLeft,
   CheckCircle2,
   Clock,
-  Loader2,
   MapPin,
   Package,
   ReceiptText,
@@ -25,8 +23,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
 
 const STATUS_CONFIG: Record<
   Order["status"],
@@ -68,27 +64,8 @@ const STATUS_CONFIG: Record<
 
 export default function MyOrdersPage() {
   const router = useRouter();
-  const { data } = useSelector((state: RootState) => state.auth);
-  const isAuthenticated = Boolean(data);
 
-  const { data: orders, isLoading, error } = useMyOrders(isAuthenticated);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.replace("/signin");
-    }
-  }, [isAuthenticated, router]);
-
-  if (!isAuthenticated) {
-    return (
-      <main className="min-h-screen bg-background">
-        <HomeNavbar />
-        <div className="flex min-h-[60vh] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      </main>
-    );
-  }
+  const { data: orders, isLoading, error } = useMyOrders();
 
   const orderList = Array.isArray(orders) ? orders : [];
 
@@ -96,7 +73,6 @@ export default function MyOrdersPage() {
     <main className="min-h-screen bg-background">
       <HomeNavbar />
       <div className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8">
-        {/* Header */}
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
@@ -158,11 +134,6 @@ export default function MyOrdersPage() {
                 STATUS_CONFIG[order.status] || STATUS_CONFIG.placed;
               const StatusIcon = statusInfo.icon;
 
-              const restaurantName =
-                typeof order.restaurant === "object" && order.restaurant
-                  ? order.restaurant.restaurantName
-                  : "Restaurant";
-
               return (
                 <Card key={order._id} className="overflow-hidden">
                   {/* Header */}
@@ -173,10 +144,9 @@ export default function MyOrdersPage() {
                       </div>
                       <div>
                         <p className="text-sm font-semibold">
-                          {restaurantName}
+                          {order.restaurant.restaurantName || "Restaurant"}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          #{order._id.slice(-6).toUpperCase()} ·{" "}
                           {formatDate(order.createdAt)}
                         </p>
                       </div>

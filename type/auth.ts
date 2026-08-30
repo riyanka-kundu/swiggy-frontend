@@ -1,3 +1,8 @@
+export enum UserRole {
+  User = "user",
+  Restaurant_Owner = "restaurant_owner",
+}
+
 export interface IApiResponse {
   Login: {
     status: boolean;
@@ -7,7 +12,7 @@ export interface IApiResponse {
       id: string;
       name: string;
       email: string;
-      role: string;
+      role: UserRole;
     };
     accessToken: string;
     refreshToken: string;
@@ -20,7 +25,7 @@ export interface IApiResponse {
       id: string;
       name: string;
       email: string;
-      role: string;
+      role: UserRole;
     };
   };
 

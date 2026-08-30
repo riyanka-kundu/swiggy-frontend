@@ -35,27 +35,19 @@ export default function RestaurantLandingPage() {
 
     if (loading) return;
 
-    console.log("Sending payload:", {
-      email,
-    });
-
     try {
       const res = await dispatch(applyRestaurant({ email })).unwrap();
-
-      console.log("Response:", res);
 
       toast.success("OTP sent successfully");
 
       router.push(`/partner/otp?email=${encodeURIComponent(res.data.email)}`);
     } catch (error) {
-      console.log("Apply error:", error);
       toast.error(error as string);
     }
   };
 
   return (
     <main className="relative min-h-screen bg-background text-foreground">
-      {/* Theme Toggle */}
       <div className="absolute right-6 top-6 z-50">
         <ModeToggle />
       </div>

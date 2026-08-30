@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -5,7 +6,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import HomeNavbar from "@/components/home/navbar";
 import { Separator } from "@/components/ui/separator";
-import { useAddToCart, useCart, usePlaceOrder, useRemoveFromCart } from "@/hooks/user";
+import {
+  useAddToCart,
+  useCart,
+  usePlaceOrder,
+  useRemoveFromCart,
+} from "@/hooks/user";
 import { buildImageUrl, cn, formatPrice } from "@/lib/utils";
 import {
   ArrowLeft,
@@ -57,9 +63,8 @@ function CartContent() {
     );
   }
 
-  const deliveryFee = 30;
   const tax = Math.round(cart.totalAmount * 0.05);
-  const grandTotal = cart.totalAmount + deliveryFee + tax;
+  const grandTotal = cart.totalAmount + tax;
 
   const handleCheckout = () => {
     if (!address.trim()) {
@@ -102,7 +107,6 @@ function CartContent() {
               <Card key={item._id} className="overflow-hidden">
                 <CardContent className="p-4">
                   <div className="flex gap-4">
-                    {/* Food image / veg indicator */}
                     <div className="relative shrink-0">
                       {food.image ? (
                         <img
@@ -125,7 +129,6 @@ function CartContent() {
                       />
                     </div>
 
-                    {/* Info */}
                     <div className="flex flex-1 flex-col justify-between gap-2">
                       <div>
                         <p className="font-semibold">{food.itemName}</p>
@@ -135,7 +138,6 @@ function CartContent() {
                       </div>
 
                       <div className="flex items-center justify-between">
-                        {/* Quantity controls */}
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => removeItem(food._id)}
@@ -152,7 +154,9 @@ function CartContent() {
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => addToCart({ foodId: food._id, quantity: 1 })}
+                            onClick={() =>
+                              addToCart({ foodId: food._id, quantity: 1 })
+                            }
                             disabled={adding || removing}
                             className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
                           >
@@ -160,7 +164,6 @@ function CartContent() {
                           </button>
                         </div>
 
-                        {/* Price */}
                         <div className="text-right">
                           <p className="font-bold">
                             {formatPrice(effectivePrice * item.quantity)}
@@ -178,7 +181,6 @@ function CartContent() {
           })}
         </div>
 
-        {/* Order Summary */}
         <div className="space-y-4">
           <Card>
             <CardHeader>
@@ -191,10 +193,6 @@ function CartContent() {
                   <span>{formatPrice(cart.totalAmount)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Delivery fee</span>
-                  <span>{formatPrice(deliveryFee)}</span>
-                </div>
-                <div className="flex justify-between">
                   <span className="text-muted-foreground">GST (5%)</span>
                   <span>{formatPrice(tax)}</span>
                 </div>
@@ -204,9 +202,7 @@ function CartContent() {
 
               <div className="flex justify-between font-bold">
                 <span>Total</span>
-                <span className="text-primary">
-                  {formatPrice(grandTotal)}
-                </span>
+                <span className="text-primary">{formatPrice(grandTotal)}</span>
               </div>
 
               {/* Delivery address */}
@@ -264,4 +260,3 @@ export default function CartPage() {
     </main>
   );
 }
-

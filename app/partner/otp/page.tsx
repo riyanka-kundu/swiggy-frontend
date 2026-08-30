@@ -53,7 +53,7 @@ function PartnerOtpForm() {
 
       toast.success("Email verified successfully");
 
-      router.push("/partner/onboarding/restaurant");
+      router.replace("/partner/onboarding/restaurant");
     } catch (error) {
       toast.error(error as string);
     }

@@ -38,10 +38,7 @@ export const useUserRestaurantList = () => {
 };
 
 // ============ Foods by Restaurant ============
-export const useRestaurantFoods = (
-  restaurantId: string,
-  enabled = true,
-) => {
+export const useRestaurantFoods = (restaurantId: string, enabled = true) => {
   return useQuery<{ restaurant: RestaurantListItem; foods: Food[] }>({
     queryKey: [QUERY_KEY.Restaurant_Foods, restaurantId],
     queryFn: async () => {
@@ -57,34 +54,19 @@ export const useRestaurantFoods = (
   });
 };
 
-// ============ Cart ============
 export const useCart = (enabled = true) => {
   return useQuery<Cart | null>({
     queryKey: [QUERY_KEY.Cart],
     queryFn: async () => {
-      try {
-        const res = await axiosInstance.get<{ data: Cart | [] }>(
-          EndPoints.cart.LIST,
-        );
-        const data = res.data.data;
+      const res = await axiosInstance.get<{ data: Cart | [] }>(
+        EndPoints.cart.LIST,
+      );
+      const data = res.data.data;
 
-        // Backend returns [] when no cart exists and null after clearing it
-        if (!data || Array.isArray(data) || !Array.isArray(data.items)) {
-          return null;
-        }
-
-        return data;
-      } catch (err: unknown) {
-        const error = err as { response?: { status: number } };
-        if (
-          error?.response?.status === 404 ||
-          error?.response?.status === 401 ||
-          error?.response?.status === 403
-        ) {
-          return null;
-        }
-        throw err;
+      if (!data || Array.isArray(data) || !Array.isArray(data.items)) {
+        return null;
       }
+      return data;
     },
     enabled,
     retry: false,
@@ -123,7 +105,7 @@ export const useRemoveFromCart = () => {
 };
 
 // ============ Orders ============
-export const useMyOrders = (enabled = true) => {
+export const useMyOrders = () => {
   return useQuery<Order[]>({
     queryKey: [QUERY_KEY.My_Orders],
     queryFn: async () => {
@@ -132,7 +114,6 @@ export const useMyOrders = (enabled = true) => {
       );
       return res.data.data;
     },
-    enabled,
   });
 };
 

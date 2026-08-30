@@ -3,12 +3,13 @@
 import { useRouter } from "next/navigation";
 
 import Login from "@/components/auth/login";
+import { UserRole } from "@/type/auth";
 
 export default function SignInPage() {
   const router = useRouter();
 
-  const handleSuccess = (role: string) => {
-    if (role === "restaurant_owner") {
+  const handleSuccess = (role: UserRole) => {
+    if (role === UserRole.Restaurant_Owner) {
       router.replace("/partner/dashboard");
     } else {
       router.replace("/");

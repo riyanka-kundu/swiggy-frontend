@@ -14,9 +14,10 @@ import { Label } from "@/components/ui/label";
 import { login } from "@/redux/slice/auth-slice";
 import { AppDispatch, RootState } from "@/redux/store/store";
 import { LoginSchema, TLoginPayload } from "@/schema/login";
+import { UserRole } from "@/type/auth";
 
 type Props = {
-  onSuccess: (role: string) => void;
+  onSuccess: (role: UserRole) => void;
 };
 
 export default function Login({ onSuccess }: Props) {
@@ -41,7 +42,7 @@ export default function Login({ onSuccess }: Props) {
     try {
       const res = await dispatch(login(data)).unwrap();
       toast.success(res.message || "Login successful");
-      onSuccess(res.data?.role || "user");
+      onSuccess(res.data?.role || UserRole.User);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : String(error));
     }

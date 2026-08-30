@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useRestaurantFoods } from "@/hooks/user";
 import { cn, formatTime } from "@/lib/utils";
 import { RootState } from "@/redux/store/store";
+import { UserRole } from "@/type/auth";
 import {
   ArrowLeft,
   Clock,
@@ -35,7 +36,7 @@ export default function RestaurantDetail({
   restaurantId: string;
 }) {
   const { data: authData } = useSelector((state: RootState) => state.auth);
-  const isLoggedInUser = authData?.data?.role === "user";
+  const isLoggedInUser = authData?.data?.role === UserRole.User;
 
   const { data, isLoading, isError } = useRestaurantFoods(
     restaurantId,
@@ -158,7 +159,7 @@ export default function RestaurantDetail({
                   {slot && (
                     <span className="flex items-center gap-1.5">
                       <Clock className="h-3.5 w-3.5" />
-                      {formatTime(slot.open)} – {formatTime(slot.close)}
+                      {formatTime(slot.open)} - {formatTime(slot.close)}
                     </span>
                   )}
                 </p>

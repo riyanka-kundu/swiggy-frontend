@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +9,7 @@ import {
   useRestaurantOrders,
   useUpdateOrderStatus,
 } from "@/hooks/restaurant-owner";
-import { cn, formatDate, formatPrice, buildImageUrl } from "@/lib/utils";
+import { buildImageUrl, cn, formatDate, formatPrice } from "@/lib/utils";
 import { Order } from "@/type";
 import {
   AlertTriangle,
@@ -39,12 +40,14 @@ const STATUS_CONFIG: Record<
   },
   preparing: {
     label: "Preparing",
-    color: "bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300",
+    color:
+      "bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300",
     icon: Package,
   },
   out_for_delivery: {
     label: "Out for Delivery",
-    color: "bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300",
+    color:
+      "bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300",
     icon: Truck,
   },
   delivered: {
@@ -153,13 +156,11 @@ export default function RestaurantOrdersPage() {
             const StatusIcon = statusInfo.icon;
             const nextStatus = NEXT_STATUS[order.status];
 
-            const userName =
-              typeof order.user === "object" && order.user
-                ? order.user.full_name
-                : "Customer";
-
             return (
-              <Card key={order._id} className="overflow-hidden [--card-spacing:--spacing(4)]">
+              <Card
+                key={order._id}
+                className="overflow-hidden [--card-spacing:--spacing(4)]"
+              >
                 <CardHeader className="border-b bg-muted/20 pb-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
@@ -196,13 +197,11 @@ export default function RestaurantOrdersPage() {
                       <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         Customer
                       </span>
-                      <span className="truncate font-medium">{userName}</span>
-                      {typeof order.user === "object" &&
-                        order.user?.email && (
-                          <span className="truncate text-muted-foreground">
-                            {order.user.email}
-                          </span>
-                        )}
+                      {typeof order.user === "object" && order.user?.email && (
+                        <span className="truncate text-muted-foreground">
+                          {order.user.email}
+                        </span>
+                      )}
                     </div>
 
                     {order.address && (
@@ -245,7 +244,9 @@ export default function RestaurantOrdersPage() {
                             <span
                               className={cn(
                                 "absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 border-card",
-                                item.food?.isVeg ? "bg-green-500" : "bg-red-500",
+                                item.food?.isVeg
+                                  ? "bg-green-500"
+                                  : "bg-red-500",
                               )}
                             />
                           </div>
@@ -272,7 +273,9 @@ export default function RestaurantOrdersPage() {
                   {/* Footer / Actions */}
                   <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
                     <div>
-                      <p className="text-xs text-muted-foreground">Total Amount</p>
+                      <p className="text-xs text-muted-foreground">
+                        Total Amount
+                      </p>
                       <p className="text-lg font-bold text-primary">
                         {formatPrice(order.totalAmount)}
                       </p>

@@ -124,14 +124,19 @@ export interface OrderItem {
 export interface Order {
   _id: string;
   user: { _id: string; full_name: string; email: string } | string;
-  restaurant: RestaurantListItem | string;
+  restaurant: RestaurantListItem;
   items: OrderItem[];
   totalAmount: number;
-  status: "placed" | "accepted" | "preparing" | "out_for_delivery" | "delivered" | "cancelled";
+  status:
+    | "placed"
+    | "accepted"
+    | "preparing"
+    | "out_for_delivery"
+    | "delivered"
+    | "cancelled";
   address: string;
   paymentMethod: string;
   isPaid: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
-

@@ -10,7 +10,7 @@ import { TVerifyOtpPayload } from "@/schema/otp";
 import { TRegisterPayload } from "@/schema/register";
 
 import { ACCESS_TOKEN, REFRESH_TOKEN, USER_ROLE } from "@/lib/constant";
-import { IApiResponse } from "@/type/auth";
+import { IApiResponse, UserRole } from "@/type/auth";
 
 // ================= REGISTER =================
 
@@ -175,7 +175,7 @@ export const verifyRestaurantOtp = createAsyncThunk(
         maxAge: 60 * 60 * 24,
       });
 
-      cookies.set(USER_ROLE, "restaurant_owner", {
+      cookies.set(USER_ROLE, UserRole.Restaurant_Owner, {
         path: "/",
         maxAge: 60 * 60 * 24,
       });

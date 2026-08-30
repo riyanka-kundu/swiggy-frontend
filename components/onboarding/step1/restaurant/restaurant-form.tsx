@@ -61,8 +61,6 @@ export default function RestaurantForm({ onNext }: Props) {
     }
   }, [restaurant, form]);
 
-
-
   async function onSubmit(data: TRestaurant) {
     const payload = {
       ownerName: data.ownerName,

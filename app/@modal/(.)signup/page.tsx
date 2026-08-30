@@ -26,9 +26,9 @@ type Step = "register" | "otp";
 const STEP_CONTENT = {
   register: {
     title: "Create an account",
-    description: "Sign up to start ordering your favourite food.",
+    description: "Sign up to start ordering your favorite food.",
   },
-
+   
   otp: {
     title: "Verify your mobile",
     description: "Enter the OTP sent to your email.",
