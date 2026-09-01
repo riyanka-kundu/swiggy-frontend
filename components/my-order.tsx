@@ -5,7 +5,8 @@ import HomeNavbar from "@/components/home/navbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useMyOrders } from "@/hooks/user";
+import CancelOrderButton from "@/components/cancel-order-button";
+import { useMyOrders, useCancelOrder } from "@/hooks/user";
 import { buildImageUrl, cn, formatDate, formatPrice } from "@/lib/utils";
 import { Order } from "@/type";
 import {
@@ -64,7 +65,7 @@ const STATUS_CONFIG: Record<
 
 export default function MyOrdersPage() {
   const router = useRouter();
-
+  const { mutate: cancelOrder, isPending: cancelling } = useCancelOrder();
   const { data: orders, isLoading, error } = useMyOrders();
 
   const orderList = Array.isArray(orders) ? orders : [];
@@ -213,13 +214,24 @@ export default function MyOrdersPage() {
                           {order.items?.length || 0} items
                         </p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-xs text-muted-foreground">
-                          Total Amount
-                        </p>
-                        <p className="text-lg font-bold text-primary">
-                          {formatPrice(order.totalAmount)}
-                        </p>
+                      <div className="flex items-center gap-3">
+                        {["placed", "accepted"].includes(order.status) && (
+                          <CancelOrderButton
+                            subtitle={
+                              order.restaurant?.restaurantName || undefined
+                            }
+                            loading={cancelling}
+                            onCancel={() => cancelOrder(order._id)}
+                          />
+                        )}
+                        <div className="text-right">
+                          <p className="text-xs text-muted-foreground">
+                            Total Amount
+                          </p>
+                          <p className="text-lg font-bold text-primary">
+                            {formatPrice(order.totalAmount)}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </CardContent>

@@ -140,3 +140,27 @@ export interface Order {
   createdAt: Date;
   updatedAt: Date;
 }
+export type THandleRestaurantOpenClosePayload = {
+  restaurantId: string;
+  restaurantName: string;
+  isOpen: boolean;
+};
+export type OrderStatusPayload = {
+  orderId: string;
+  userId: string;
+  restaurantId: string;
+  previousStatus:
+    | "placed"
+    | "accepted"
+    | "preparing"
+    | "out_for_delivery"
+    | "delivered"
+    | "cancelled";
+  currentStatus:
+    | "placed"
+    | "accepted"
+    | "preparing"
+    | "out_for_delivery"
+    | "delivered"
+    | "cancelled";
+};

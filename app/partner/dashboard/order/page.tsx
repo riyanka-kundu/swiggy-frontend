@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import CancelOrderButton from "@/components/cancel-order-button";
 import {
   useRestaurantOrders,
   useUpdateOrderStatus,
@@ -302,22 +303,18 @@ export default function RestaurantOrdersPage() {
                         </Button>
                       )}
 
-                      {order.status !== "cancelled" &&
-                        order.status !== "delivered" && (
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            disabled={updating}
-                            onClick={() =>
-                              updateStatus({
-                                orderId: order._id,
-                                status: "cancelled",
-                              })
-                            }
-                          >
-                            Cancel
-                          </Button>
-                        )}
+                      {["placed", "accepted", "preparing"].includes(order.status) && (
+                        <CancelOrderButton
+                          subtitle={`Order #${order._id.slice(-6).toUpperCase()}`}
+                          loading={updating}
+                          onCancel={() =>
+                            updateStatus({
+                              orderId: order._id,
+                              status: "cancelled",
+                            })
+                          }
+                        />
+                      )}
                     </div>
                   </div>
                 </CardContent>

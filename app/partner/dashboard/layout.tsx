@@ -4,6 +4,7 @@ import { SidebarContent } from "@/components/restaurant-owner/sidebar-content";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 
+import LiveOrdersSocket from "@/components/restaurant-owner/live-orders-socket";
 import { UtensilsCrossed } from "lucide-react";
 import { ReactNode, useState } from "react";
 
@@ -14,6 +15,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-background">
+      <LiveOrdersSocket />
       {/* Mobile top bar */}
       <header className="flex h-14 shrink-0 items-center justify-between border-b bg-card px-4 md:hidden">
         <div className="flex items-center gap-2">
