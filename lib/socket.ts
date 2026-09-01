@@ -3,14 +3,13 @@ import { io, Socket } from "socket.io-client";
 let socket: Socket | null = null;
 
 export function getSocket(): Socket {
+  // const cookie = new Cookies();
   if (!socket) {
     socket = io(process.env.NEXT_PUBLIC_BASE_URL, {
-      autoConnect: false,
+      // auth: { token: cookie.get(ACCESS_TOKEN) },
+      autoConnect: true,
       withCredentials: true,
       reconnection: true,
-      reconnectionAttempts: Infinity,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
       transports: ["websocket", "polling", "webtransport"],
     });
   }
